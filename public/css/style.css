@@ -1,0 +1,55 @@
+.top-buffer{
+	margin-top: 50px;
+}
+.Rt{
+	right: 0;
+}
+.card-width{
+	height: 434px;
+}
+.nav-color{
+	background-color: #006064;
+}
+body{
+	font-family: '0 Roya', tahoma, Arial;
+}
+
+.title-size {
+	font-size: 20px !important;
+}
+.pagination li.active{
+    background-color: #00796b;
+}
+
+/* fallback */
+@font-face {
+	font-family: 'Material Icons';
+	font-style: normal;
+	font-weight: 400;
+	src: local('Material Icons'), local('MaterialIcons-Regular'), url(https://fonts.gstatic.com/s/materialicons/v22/2fcrYFNaTjcS6g4U3t-Y5ZjZjT5FdEJ140U2DJYC3mY.woff2)
+}
+
+.material-icons {
+	font-family: 'Material Icons';
+	font-weight: normal;
+	font-style: normal;
+	font-size: 24px;
+	line-height: 1;
+	letter-spacing: normal;
+	text-transform: none;
+	display: inline-block;
+	white-space: nowrap;
+	word-wrap: normal;
+	direction: ltr;
+	-webkit-font-feature-settings: 'liga';
+	-webkit-font-smoothing: antialiased;
+}
+
+@font-face {
+     font-family: '0 Roya';
+     src: local('☺'),
+     local('0 Roya'),
+     url('http://awebfont.ir/services/fonts/611bba0f218e4740e1ce2e37ebc80ef3c29513101011931.woff') format('woff');
+font-weight: normal;
+font-style: normal;
+}

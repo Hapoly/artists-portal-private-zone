@@ -127,55 +127,140 @@ class HomeController extends Controller
         if($validator->fails()){
             return view('welcome', [
                 'oldInputs'                 => $request->all(),
-                'tab'                       => 'register'
+                'tab'                       => 'register',
+                'error_type'                => 'fail',
                 ])->withErrors($validator);
 
         }else{
+
             $id = User::create([
-                'name'        => $request->input('name'),
-                'email'       => $request->input('email'),
-                'password'    => bcrypt($request->input('password')),
-                'first_name'  => $request->input('first_name'),
-                'last_name'   => $request->input('last_name'),
-                'phone'       => $request->input('phone'),
-                'cellphone'   => $request->input('cellphone'),
-                'group_code'  => 0,
+                'first_name'        => $request->input('first_name'),
+                'last_name'         => $request->input('last_name'),
+                'email'             => $request->input('email'),
+                'password'          => bcrypt($request->input('password')),
+                'group_code'        => 1
             ])->id;
-            Auth::attempt(['name' => $request->input('name'), 'password' => $request->input('password')]);
-            return redirect('dashboard');
+            DB::table('artists')->insert([
+                'id'                => $id,
+                'father_name'       => $request->input('father_name'),
+                'nickname'          => $request->input('nickname'),
+                'religion'          => $this->get_religion_code($request->input('religion')),
+                'habitate_years'    => $request->input('habitate_years'),
+                'habitate_place'    => $this->get_habitate_place_code($request->input('habitate_place')),
+                'phone'             => $request->input('phone'),
+                'cellphone'         => $request->input('cellphone'),
+                'address'           => $request->input('address'),
+                'birth_day'         => $request->input('birth_day'),
+                'birth_month'       => $request->input('birth_month'),
+                'birth_year'        => $request->input('birth_year'),
+                'birth_place'       => $request->input('birth_place'),
+                'profile'           => $request->file('profile_pic')->store('storage'),
+                'id_card'           => $request->file('id_card_pic')->store('storage'),
+            ]);
+
+            $art_fields = json_decode($request->input('art-fields'));
+            $educations = json_decode($request->input('educations'));
+            foreach ($art_fields as $art_field) {
+                DB::table('art_fields')->insert([
+                    'artist_id'         => $id,
+                    'art_field_id'      => $art_field->id,
+                    'art_field_title'   => $art_field->title,
+                ]);
+            }
+
+            foreach ($educations as $education) {
+                DB::table('educations')->insert([
+                    'artist_id'         => $id,
+                    'education_id'      => $education->id,
+                    'education_title'   => $education->title,
+                ]);
+            }
+
+            Auth::attempt(['email' => $request->input('email'), 'password' => $request->input('password')]);
+            return view('welcome', [
+                'oldInputs'                 => $request->all(),
+                'tab'                       => 'register',
+                'error_type'                => 'done',
+                ]);
         }
     }
     public function myRegisterValidate($request){
-        Validator::extend('checkIf', function ($attribute, $value, $parameters, $validator) {
-            return !(in_array($parameters[0], array('on', 'true', 1, '1')));
-        });
         $messages = [
             'first_name.*'                  => 'لطفا نام را وارد کنید',
             'last_name.*'                   => 'لطفا نام خانوادگی کاربر را وارد کنید',
             'email.*'                       => 'آدرس ایمیل نامعتبر',
-            
-            'name.*'                        => 'لطفا نام کاربری را وارد کنید',
+            'father_name.*'                 => 'لطفا نام پدر خود را وارد کنید',
+            'nickname.*'                    => 'نام هنری خود را وارد کنید',
+
+            'religion.*'                    => 'مذهب نامعتبر است',
+            'habitate_years.*'              => 'سال های سکونت نامعتبر است',
+            'habitate_place.*'              => 'محل سکونت نامعتبر است',
+            'phone.*'                       => 'شماره تماس همراه نامعتبر است',
+            'cellphone.*'                   => 'شماره تلفن ثابت نامعتبر است',
+
+            'address.*'                     => 'آدرس نامعتبر است',
+            'birth_day.*'                   => 'روز تولد نامعتبر است',
+            'birth_month.*'                 => 'ماه تولد نامعتبر است',
+            'birth_year.*'                  => 'سال تولد نامعتبر است',
+            'birth_place.*'                 => 'محل تولد را وارد کنید',
+            'profile_pic.*'                 => 'عکس پرسنلی خود را انتخاب کنید',
+            'id_card_pic.*'                 => 'اسکن کارت ملی خود را آپلود کنید',
+
             'password.*'                    => 'لطفا کلمه عبور را وارد کنید(حداقل ۴ حرف)',
-            
-            'phone.*'                       => 'شماره تلفن ثابت نامعتبر است',
-            'cellphone.*'                   => 'لطفا شماره تلفن همراه را وارد کنید',
+            'password_conf.*'               => 'کلمات عبور یکسان نیستند',
         ];
 
         $rules = [
-            'first_name'                => 'required',
-            'last_name'                 => 'required',
-            'email'                     => 'required|email',
-            
-            'name'                      => 'required|min:4',
-            'password'                  => 'required|string|min:4',
-            'password_conf'             => 'required|confirmed:password',
-            'phone'                     => 'required|string',
-            'cellphone'                 => 'required|string',
+            'first_name'                  => 'required',
+            'last_name'                   => 'required',
+            'email'                       => 'required|email',
+            'father_name'                 => 'required',
+            'nickname'                    => 'required',
+
+            'religion'                    => 'required',
+            'habitate_years'              => 'required',
+            'habitate_place'              => 'required',
+            'phone'                       => 'required',
+            'cellphone'                   => 'required',
+
+            'address'                     => 'required',
+            'birth_day'                   => 'required|numeric',
+            'birth_month'                 => 'required|numeric',
+            'birth_year'                  => 'required|numeric',
+            'birth_place'                 => 'required',
+            'password'                    => 'required|string|min:4',
         ];
         $validator = Validator::make($request->all(), $rules, $messages);
 
         return $validator;
     }
+    public function get_religion_code($title){
+        $data = [
+            "اسلام شیعه"    => 1,
+            "اسلام سنی"     => 2,
+            "مسیحیت"        => 3,
+            "کلیمی"         => 4,
+            "زرتشتی"        => 5,
+            "رضا"           => 6,
+        ];
+        return $data[$title];
+    }
+
+    public function get_habitate_place_code($title){
+        $data = [
+            "رشت"       => 1,
+            "آستانه"    => 2,
+            "انزلی"     => 3,
+            "صومعه سرا" => 4,
+            "رودسر"     => 5,
+            "لاهیجان"   => 6,
+            "جیرده"     => 7,
+        ];
+        return $data[$title];
+    }
+
+
+
     public function myProfileValidate($request){
         Validator::extend('checkIf', function ($attribute, $value, $parameters, $validator) {
             return !(in_array($parameters[0], array('on', 'true', 1, '1')));

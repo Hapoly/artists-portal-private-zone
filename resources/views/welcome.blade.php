@@ -1,265 +1,246 @@
 <!doctype html>
 <html lang="en">
-<head>
+  <head>
     <meta charset="utf-8">
-    <meta http-equiv="X-UA-Compatible" content="IE=edge">
-    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+    <meta name="theme-color" content="#000000">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
 
-    <!-- CSRF Token -->
-    <meta name="csrf-token" content="{{ csrf_token() }}">
+    <link type="text/css" rel="stylesheet" href="css/materialize.min.css"  media="screen,projection"/>
+    <link type="text/css" rel="stylesheet" href="css/style.css"  media="screen,projection"/>
+    <link rel="shortcut icon" href="favicon.ico">
 
-    <title>{{ config('app.name', 'اشتغال') }}</title>
-
-    <link href="{{ asset('css/bootstrap.min.css') }}" rel="stylesheet"/>
-    <link href="{{ asset('css/material-dashboard.css') }}" rel="stylesheet"/>
-    <link href="{{ asset('css/demo.css') }}" rel="stylesheet"/>
-
-    <link href="http://maxcdn.bootstrapcdn.com/font-awesome/latest/css/font-awesome.min.css" rel="stylesheet">
-    <link href='http://fonts.googleapis.com/css?family=Roboto:400,700,300|Material+Icons' rel='stylesheet'
-          type='text/css'>
-    <link href="https://fonts.googleapis.com/css?family=Lateef" rel="stylesheet">
-    <link href='http://awebfont.ir/css?id=1920' rel='stylesheet' type='text/css'>
-    <script>
+    <script type="text/javascript" src="js/jquery-2.1.1.min.js"></script>
+    <script type="text/javascript" src="js/materialize.min.js"></script>
+    <script type="text/javascript" src="js/functions.js"></script>
+    <title>{{ config('app.name', 'هنرمندان') }}</title>
+    <style>
         body {
             font-family: '0 Roya', tahoma, Arial;
         }
-    </script>
-</head>
-
-<body>
-
-<div class="wrapper">
-    <div class="content">
-        <div class="container-fluid">
-            <div class="row">
-                <div class="col-md-offset-4 col-md-4 col-sm-offset-4 col-sm-4 col-xs-offset-3 col-xs-6">
-                    <img src="{{ asset('img/logo-big.png') }}" class="img-responsive"/>
-                </div>
+    </style>
+  </head>
+  <body class="teal lighten-5" style="direction: rtl;">
+    <div class="top-buffer row">
+        <div class="row">
+            <div class="col s12 m4 offset-m4">
+                <img src="img/logo-big.png" 
+                    alt="" 
+                    class="responsive-img"
+                />
             </div>
+        </div>
+        @if (isset($error_type))
+            @if (count($errors) > 0 && $error_type == 'fail')
             <div class="row">
-                <div class="col-md-6 col-md-offset-3 col-lg-6 col-lg-offset-3 col-sm-12">
-                    @if (count($errors) > 0)
-                        <div class="alert alert-danger rtl">
-                            <ul>
+                <div class="col s12 m6 offset-m3 top-buffer">
+                    <div class="card-panel  red darken-1 white-text">
+                        <ul>
                             @foreach ($errors->all() as $error)
                                     <li>{{ $error }}</li>
                             @endforeach
-                            </ul>
-                        </div>
-                    @endif
+                        </ul>
+                    </div>
                 </div>
             </div>
+            @endif
+            @if($error_type == 'done')
             <div class="row">
-                <div class="col-lg-6 col-md-6 col-md-offset-3 col-lg-offset-3 col-sm-12" style="text-align: center;">
-                    <div class="card card-nav-tabs">
-                        <div class="card-header" data-background-color="purple">
-                            <div class="nav-tabs-navigation">
-                                <div class="nav-tabs-wrapper">
-                                    <ul class="nav nav-tabs" data-tabs="tabs">
-                                        <li class="{{$tab == 'login'? 'active' : ''}} pull-right">
-                                            <a href="#login" data-toggle="tab">
-                                                ورود
-                                            <div class="ripple-container"></div></a>
-                                        </li>
-                                        <li class="{{$tab == 'register'? 'active' : ''}} pull-right">
-                                            <a href="#register" data-toggle="tab">
-                                                ثبت نام
-                                            <div class="ripple-container"></div></a>
-                                        </li>
-                                    </ul>
-                                </div>
-                            </div>
+                <div class="col s12 m6 offset-m3 top-buffer">
+                    <div class="card-panel green darken-3 white-text">
+                        <p>ثبت نام با موفیقت انجام شد</p>
+                        <p>هنرمند محترم. درخواست شما برای ثبت نام در سامانه هنرمندان منطقه آزاد انزلی با موفقیت ارسال شد. کارشناسان مربوطه در اسرع وقت با بررسی اطلاعات ارسال شده توسط شما، با درخواست شما موافقت کرده و شما را از طریق ایمیل آگاه خواهند ساخت</p>
+                        <p>با تشکر</p>
+                    </div>
+                </div>
+            </div>
+            @endif
+        @endif
+        <div class="row">
+            <div class="col s12 m6 offset-m3">
+                <div class="card-panel white">
+                    <div class="row">
+                        <div class="col s12">
+                        <ul class="tabs tabs-fixed-width">
+                            <li class="tab col s3"><a class="{{$tab=='login'?'active':''}} black-text title-size" href="#login">ورود</a></li>
+                            <li class="tab col s3"><a class="{{$tab=='register'?'active':''}} black-text title-size" href="#register">ثبت نام</a></li>
+                        </ul>
                         </div>
+                        <div id="login" class="col s12 top-buffer">
+                            <AuthLogin component={this} />
+                        </div>
+                        <div id="register" class="col s12 ">
+                            <form action="{{url('register')}}" method="post" enctype="multipart/form-data">
+                            {{ csrf_field() }}
+                            <div class="row">
+                                <div class="col s12">
+                                    <div class="row"> 
+                                        <div class="input-field col m6 s12 right">
+                                            <input  id="reg_firstname" name="first_name" type="text" class="validate"
+                                            value="{{isset($oldInputs)?$oldInputs['first_name']:''}}"/>
+                                            <label for="reg_firstname">* نام</label>
+                                        </div>
+                                        <div class="input-field col m6 s12 right">
+                                            <input id="reg_lastname" name="last_name" type="text" class="validate"
+                                            value="{{isset($oldInputs)?$oldInputs['last_name']:''}}"/>
+                                            <label for="reg_lastname">* نام خانوادگی</label>
+                                        </div>
+                                    </div>
 
-                        <div class="card-content">
-                            <div class="tab-content">
-                                <div class="tab-pane {{$tab == 'register'? 'active' : ''}}" id="register">
-                                    <form action="{{url('register')}}" method="post">
-                                        {{ csrf_field() }}
-                                        <div class="row">
-                                            <div class="col-md-6 pull-right">
-                                                <div class="form-group label-floating rtl col-lg-12 col-md-12">
-                                                    <label class="control-label">نام</label>
-                                                    <input type="text" value="{{isset($oldInputs)? $oldInputs['first_name']: ''}}" name="first_name" class="form-control">
-                                                </div>
-                                            </div>
-                                            <div class="col-md-6 pull-right">
-                                                <div class="form-group label-floating rtl col-lg-12 col-md-12">
-                                                    <label class="control-label">نام خانوادگی</label>
-                                                    <input type="text" value="{{isset($oldInputs)? $oldInputs['last_name']: ''}}" name="last_name" class="form-control">
-                                                </div>
-                                            </div>
+                                    <div class="row"> 
+                                        <div class="input-field col s12 m12">
+                                            <input  id="reg_email" name="email" type="email" class="validate"
+                                            value="{{isset($oldInputs)?$oldInputs['email']:''}}"/>
+                                            <label for="reg_email">* آدرس ایمیل</label>
+                                        </div> 
+                                    </div>
+
+                                    <div class="row"> 
+                                        <div class="input-field col m6 s12 right">
+                                            <input  id="reg_password" name="password" type="password" class="validate"/>
+                                            <label for="reg_password">* کلمه عبور</label>
+                                        </div> 
+                                        <div class="input-field col m6 s12 right">
+                                            <input id="reg_rep_password" name="password_conf" type="password" class="validate"/>
+                                            <label for="reg_rep_password">* تکرار کلمه عبور</label>
                                         </div>
-                                        <div class="row">
-                                            <div class="col-md-6 pull-right">
-                                                <div class="form-group label-floating rtl col-lg-12 col-md-12">
-                                                    <label class="control-label">نام کاربری</label>
-                                                    <input type="text" value="{{isset($oldInputs)? $oldInputs['name']: ''}}" name="name" class="form-control">
-                                                </div>
-                                            </div>
-                                            <div class="col-md-6 pull-right">
-                                                <div class="form-group label-floating rtl col-lg-12 col-md-12">
-                                                    <label class="control-label">آدرس ایمیل</label>
-                                                    <input type="email" value="{{isset($oldInputs)? $oldInputs['email']: ''}}" name="email" class="form-control">
-                                                </div>
-                                            </div>
+                                    </div>
+
+                                    <div class="row"> 
+                                        <div class="input-field col m6 s12 right">
+                                            <input  id="reg_fathername" name="father_name" type="text" class="validate"
+                                            value="{{isset($oldInputs)?$oldInputs['father_name']:''}}"/>
+                                            <label for="reg_fathername">* نام پدر</label>
                                         </div>
-                                        <div class="row">
-                                            <div class="col-md-6 pull-right">
-                                                <div class="form-group label-floating rtl col-lg-12 col-md-12">
-                                                    <label class="control-label">کلمه عبور</label>
-                                                    <input type="password" value="{{isset($oldInputs)? $oldInputs['password']: ''}}" name="password" class="form-control">
-                                                </div>
-                                            </div>
-                                            <div class="col-md-6 pull-right">
-                                                <div class="form-group label-floating rtl col-lg-12 col-md-12">
-                                                    <label class="control-label">تکرار کلمه عبور</label>
-                                                    <input type="password" value="{{isset($oldInputs)? $oldInputs['password_conf']: ''}}" name="password_conf" class="form-control">
-                                                </div>
-                                            </div>
+                                        <div class="input-field col m6 s12 right">
+                                            <input id="reg_artname" name="nickname" type="text" class="validate"
+                                            value="{{isset($oldInputs)?$oldInputs['nickname']:''}}"/>
+                                            <label for="reg_artname">* نام هنری</label>
                                         </div>
+                                    </div>
                                         <div class="row">
-                                            <div class="col-md-6 pull-right">
-                                                <div class="form-group label-floating rtl col-lg-12 col-md-12">
-                                                    <label class="control-label">شماره تماس ثابت</label>
-                                                    <input type="text" value="{{isset($oldInputs)? $oldInputs['phone']: ''}}" name="phone" class="form-control">
-                                                </div>
-                                            </div>
-                                            <div class="col-md-6 pull-right">
-                                                <div class="form-group label-floating rtl col-lg-12 col-md-12">
-                                                    <label class="control-label">شماره تلفن همراه</label>
-                                                    <input type="text" value="{{isset($oldInputs)? $oldInputs['cellphone']: ''}}" name="cellphone" class="form-control">
-                                                </div>
-                                            </div>
+                                            <div class="chips chips-autocomplete art-fields-autocomplete"></div>
+                                            <input hidden id="art-fields" name="art-fields" value="[]"></input>
                                         </div>
-                                        <div class="row">
-                                            <div class="col-md-12">
-                                                <button type="submit" class="btn btn-primary pull-right">ثبت نام</button>
-                                            </div>
+                                    <div class="row">
+                                        <div class="input-field col s12">
+                                            <input type="text" id="religion" name="religion" class="autocomplete religion-autocomplete"
+                                            value="{{isset($oldInputs)?$oldInputs['religion']:''}}"/>
+                                            <label for="autocomplete-input">* مذهب</label>
                                         </div>
-                                    </form>
-                                </div>
-                                <div class="tab-pane {{$tab == 'login'? 'active' : ''}}" id="login">
-                                    <form action="{{url('login')}}" method="post">
-                                        {{ csrf_field() }}
-                                        <div class="row">
-                                            <div class="col-md-6 pull-right">
-                                                <div class="form-group label-floating rtl col-lg-12 col-md-12">
-                                                    <label class="control-label">نام کاربری</label>
-                                                    <input type="text" value="{{isset($oldInputs)? $oldInputs['name']: ''}}" name="name" class="form-control">
-                                                </div>
-                                            </div>
-                                            <div class="col-md-6 pull-right">
-                                                <div class="form-group label-floating rtl col-lg-12 col-md-12">
-                                                    <label class="control-label">کلمه عبور</label>
-                                                    <input type="password" value="{{isset($oldInputs)? $oldInputs['password']: ''}}" name="password" class="form-control">
-                                                </div>
-                                            </div>
+                                    </div>
+                                    <div class="row">
+                                        <div class="input-field col m6 s12 right">
+                                            <input id="habitate_years" name="habitate_years" type="number" class="validate"
+                                            value="{{isset($oldInputs)?$oldInputs['habitate_years']:''}}"/>
+                                            <label for="habitate_years">* سال های سکونت</label>
                                         </div>
-                                        <div class="row">
-                                            <div class="col-md-12">
-                                                <button type="submit" class="btn btn-primary pull-right">ورود</button>
-                                            </div>
+                                        <div class="input-field col m6 s12 right">
+                                            <input type="text" id="habitate_place" name="habitate_place" class="autocomplete habitate-autocomplete"
+                                            value="{{isset($oldInputs)?$oldInputs['habitate_place']:''}}"/>
+                                            <label for="habitate_place">* محل سکونت</label>
                                         </div>
-                                    </form>
-                                </div>
-                                <div class="tab-pane" id="settings">
-                                    <table class="table">
-                                        <tbody>
-                                            <tr>
-                                                <td>
-                                                    <div class="checkbox">
-                                                        <label>
-                                                            <input type="checkbox" name="optionsCheckboxes">
-                                                        </label>
-                                                    </div>
-                                                </td>
-                                                <td>Lines From Great Russian Literature? Or E-mails From My Boss?</td>
-                                                <td class="td-actions text-right">
-                                                    <button type="button" rel="tooltip" title="Edit Task" class="btn btn-primary btn-simple btn-xs">
-                                                        <i class="material-icons">edit</i>
-                                                    </button>
-                                                    <button type="button" rel="tooltip" title="Remove" class="btn btn-danger btn-simple btn-xs">
-                                                        <i class="material-icons">close</i>
-                                                    </button>
-                                                </td>
-                                            </tr>
-                                            <tr>
-                                                <td>
-                                                    <div class="checkbox">
-                                                        <label>
-                                                            <input type="checkbox" name="optionsCheckboxes" checked>
-                                                        </label>
-                                                    </div>
-                                                </td>
-                                                <td>Flooded: One year later, assessing what was lost and what was found when a ravaging rain swept through metro Detroit
-                                                </td>
-                                                <td class="td-actions text-right">
-                                                    <button type="button" rel="tooltip" title="Edit Task" class="btn btn-primary btn-simple btn-xs">
-                                                        <i class="material-icons">edit</i>
-                                                    </button>
-                                                    <button type="button" rel="tooltip" title="Remove" class="btn btn-danger btn-simple btn-xs">
-                                                        <i class="material-icons">close</i>
-                                                    </button>
-                                                </td>
-                                            </tr>
-                                            <tr>
-                                                <td>
-                                                    <div class="checkbox">
-                                                        <label>
-                                                            <input type="checkbox" name="optionsCheckboxes">
-                                                        </label>
-                                                    </div>
-                                                </td>
-                                                <td>Sign contract for "What are conference organizers afraid of?"</td>
-                                                <td class="td-actions text-right">
-                                                    <button type="button" rel="tooltip" title="Edit Task" class="btn btn-primary btn-simple btn-xs">
-                                                        <i class="material-icons">edit</i>
-                                                    </button>
-                                                    <button type="button" rel="tooltip" title="Remove" class="btn btn-danger btn-simple btn-xs">
-                                                        <i class="material-icons">close</i>
-                                                    </button>
-                                                </td>
-                                            </tr>
-                                        </tbody>
-                                    </table>
+                                    </div>
+                                    <div class="row"> 
+                                        <div class="input-field col m6 s12 right">
+                                            <input  id="phone" type="text" name="phone" class="validate"
+                                            value="{{isset($oldInputs)?$oldInputs['phone']:''}}"/>
+                                            <label for="phone">* شماره تماس ثابت</label>
+                                        </div>
+                                        <div class="input-field col m6 s12 right">
+                                            <input id="cellphone" type="text" name="cellphone" class="validate"
+                                            value="{{isset($oldInputs)?$oldInputs['cellphone']:''}}"/>
+                                            <label for="cellphone">* شماره همراه</label>
+                                        </div>
+                                    </div>
+                                    <div class="row"> 
+                                        <div class="input-field col m12 s12 right">
+                                            <input id="address" type="text" name="address" class="validate"
+                                            value="{{isset($oldInputs)?$oldInputs['address']:''}}"/>
+                                            <label for="address">* آدرس</label>
+                                        </div>
+                                    </div>
+                                    <div class="row">
+                                        <div class="chips chips-autocomplete educations-autocomplete"></div>
+                                        <input hidden id="educations" name="educations" value="[]"></input>
+                                    </div>
+                                    <div class="row"> 
+                                        <div class="input-field col m3 s6 right">
+                                            <input  id="birth_day" type="number" name="birth_day" min="1" class="validate"
+                                            value="{{isset($oldInputs)?$oldInputs['birth_day']:''}}"/>
+                                            <label for="birth_day">* روز تولد</label>
+                                        </div>
+                                        <div class="input-field col m3 s6 right">
+                                            <input id="birth_month" type="number" name="birth_month" min="1" max="12" class="validate"
+                                            value="{{isset($oldInputs)?$oldInputs['birth_month']:''}}"/>
+                                            <label for="birth_month">* ماه تولد</label>
+                                        </div>
+                                        <div class="input-field col m3 s6 right">
+                                            <input id="birth_year" type="number" name="birth_year" min="1300" class="validate"
+                                            value="{{isset($oldInputs)?$oldInputs['birth_year']:''}}"/>
+                                            <label for="birth_year">* سال تولد</label>
+                                        </div>
+                                        <div class="input-field col m3 s6 right">
+                                            <input id="birth_place" type="text" name="birth_place" class="validate"
+                                            value="{{isset($oldInputs)?$oldInputs['birth_place']:''}}"/>
+                                            <label for="birth_place">* محل تولد</label>
+                                        </div>
+                                    </div>
+                                    <div class="file-field input-field row">
+                                        <div class="btn">
+                                            <span>عکس پرسنلی</span>
+                                            <input id="profile_pic" name="profile_pic" type="file"/>
+                                        </div>
+                                        <div class="file-path-wrapper">
+                                            <input class="file-path validate" type="text"/>
+                                        </div>
+                                    </div>
+                                    <div class="file-field input-field row">
+                                        <div class="btn">
+                                            <span>اسکن کارت ملی</span>
+                                            <input id="id_card_pic" name="id_card_pic" type="file"/>
+                                        </div>
+                                        <div class="file-path-wrapper">
+                                            <input class="file-path validate" type="text"/>
+                                        </div>
+                                    </div>
+                                    <div class="row">
+                                        <button class="btn waves-effect waves-light" type="submit" >ثبت نام
+                                        </button>
+                                    </div>
                                 </div>
                             </div>
+                            </form>
                         </div>
                     </div>
                 </div>
             </div>
         </div>
     </div>
+    <script>
+    $('.chips').on('chip.add', function(e, chip){
+        var tags = $('.art-fields-autocomplete').material_chip('data');
+        $('#art-fields').val(JSON.stringify(tags.map(art_field_chip_to_text)));
 
-    <footer class="footer">
-        <div class="container-fluid">
-            <p class="copyright">
-                <script>document.write(new Date().getFullYear())</script>
-                <a href="http://www.prechaos.ir">کبان رایانه</a>&copy; طراحی توسط
-            </p>
-        </div>
-    </footer>
-</div>
-
-</body>
-
-<script src="{{ asset('js/jquery-3.1.0.min.js') }}" type="text/javascript"></script>
-<script src="{{ asset('js/bootstrap.min.js') }}" type="text/javascript"></script>
-<script src="{{ asset('js/material.min.js') }}" type="text/javascript"></script>
-<script src="{{ asset('js/chartist.min.js') }}"></script>
-<script src="{{ asset('js/bootstrap-notify.js') }}"></script>
-<script type="text/javascript" src="https://maps.googleapis.com/maps/api/js"></script>
-<script src="{{ asset('js/material-dashboard.js') }}"></script>
-<script src="{{ asset('js/demo.js') }}"></script>
-
-<script type="text/javascript">
-    $(document).ready(function () {
-
-        // Javascript method's body can be found in assets/js/demos.js
-        demo.initDashboardPageCharts();
-
+        var tags = $('.educations-autocomplete').material_chip('data');
+        $('#educations').val(JSON.stringify(tags.map(educations_chip_to_text)));
     });
-</script>
 
+    $('.chips').on('chip.delete', function(e, chip){
+        var tags = $('.art-fields-autocomplete').material_chip('data');
+        $('#art-fields').val(JSON.stringify(tags.map(art_field_chip_to_text)));
+
+        var tags = $('.educations-autocomplete').material_chip('data');
+        $('#educations').val(JSON.stringify(tags.map(educations_chip_to_text)));
+    });
+
+    $('.chips').on('chip.select', function(e, chip){
+        var tags = $('.art-fields-autocomplete').material_chip('data');
+        $('#art-fields').val(JSON.stringify(tags.map(art_field_chip_to_text)));
+
+        var tags = $('.educations-autocomplete').material_chip('data');
+        $('#educations').val(JSON.stringify(tags.map(educations_chip_to_text)));
+    });
+    </script>
+  </body>
 </html>
