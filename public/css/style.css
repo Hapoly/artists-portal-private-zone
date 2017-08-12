@@ -20,7 +20,9 @@ body{
 .pagination li.active{
     background-color: #00796b;
 }
-
+.btn{
+	margin: 5px;
+}
 /* fallback */
 @font-face {
 	font-family: 'Material Icons';

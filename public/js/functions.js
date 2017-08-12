@@ -1,5 +1,6 @@
 $(document).ready(function(){
     $('ul.tabs').tabs();
+    $('select').material_select();
     console.log('testing...');
     $('.art-fields-autocomplete').material_chip({
         placeholder: '+ حرفه های بیشتر',

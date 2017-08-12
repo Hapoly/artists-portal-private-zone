@@ -10,7 +10,7 @@ use Illuminate\Support\Facades\Auth;
 
 class AdminArtistsController extends Controller
 {
-    public function list(Request $request, $page=0)
+    public function list(Request $request, $page=1)
     {
         $size = 10;
 
@@ -33,7 +33,7 @@ class AdminArtistsController extends Controller
 
         return view('admin.artists.list', [
             'artists'       => $artists,
-            'currentPage'   => $page,
+            'page'          => $page,
             'pageSize'      => $size,
             'pagination'    => $this->generatePages($pageCount, $page),
             'pageCount'     => ceil($artistsCount / $size),
