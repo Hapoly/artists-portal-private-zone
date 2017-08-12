@@ -27,10 +27,11 @@ class HomeController extends Controller
     public function dashboard(Request $request)
     {
         $userGroupId = Auth::user()->group_code;
-
+        $profileName = Auth::user()->first_name . ' ' . Auth::user()->last_name;
         return view('dashboard', [
             'group_code'    => $userGroupId,
-            ]);
+            'profile_name'  => $profileName,
+        ]);
     }
 
     public function profileGet(Request $request){
@@ -40,12 +41,11 @@ class HomeController extends Controller
             ->where('id', '=', $userId)
             ->first());
 
-        return view('profile',
-            [
+        return view('profile',[
                 'group_code'    => $userGroupId,
                 'user'          => $user,
                 'name'          => Auth::user()->name
-            ]);
+        ]);
     }
 
     public function profilePost(Request $request){
