@@ -67,7 +67,27 @@
                         </ul>
                         </div>
                         <div id="login" class="col s12 top-buffer">
-                            <AuthLogin component={this} />
+                            <form action="{{url('login')}}" method="post">
+                            {{ csrf_field() }}
+                            <div class="row">
+                                <div class="col s12">
+                                    <div class="row"> 
+                                        <div class="input-field col s6">
+                                            <input id="login_password" name="password" type="password" class="validate"/>
+                                            <label for="login_password">رمز عبور</label>
+                                        </div>
+                                        <div class="input-field col s6">
+                                            <input  id="login_userName" name="email" type="text" class="validate"/>
+                                            <label for="login_userName">آدرس ایمیل</label>
+                                        </div> 
+                                    </div>
+                                    <div class="row">
+                                        <button class="btn waves-effect waves-light" type="submit" >ورود
+                                        </button>
+                                    </div>
+                                </div>
+                            </div>
+                            </form>
                         </div>
                         <div id="register" class="col s12 ">
                             <form action="{{url('register')}}" method="post" enctype="multipart/form-data">

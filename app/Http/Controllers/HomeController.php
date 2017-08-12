@@ -28,25 +28,8 @@ class HomeController extends Controller
     {
         $userGroupId = Auth::user()->group_code;
 
-        $userCount      = DB::table('users')        ->count();
-        $unitCount      = DB::table('units')        ->count();
-        $employeeCount  = DB::table('employees')    ->count();
-
-        $reports = DB::table('reports')
-            ->limit(5)->get();
-
-
         return view('dashboard', [
-            'reports'       => $reports, 
             'group_code'    => $userGroupId,
-            'userCount'     => $userCount,
-            'unitCount'     => $unitCount,
-            'types'         => [
-                1   => 'تعداد',
-                2   => 'لیست'
-            ],
-            'employeeCount' => $employeeCount,
-
             ]);
     }
 
@@ -111,7 +94,11 @@ class HomeController extends Controller
     }
 
     public function login(Request $request){
-        if (Auth::attempt(['name' => $request->input('name'), 'password' => $request->input('password')])) {
+        if (Auth::attempt([
+                'email'     => $request->input('email'), 
+                'password'  => $request->input('password'),
+                'status'    => 2
+            ])) {
             return redirect()->intended('dashboard');
         }else{
             return redirect('/')->withErrors(array('auth-failed' => 'نام کاربری یا کلمه عبور اشتباه است'));;
