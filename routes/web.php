@@ -43,19 +43,19 @@ Route::group(['namespace' => 'Admin', 'prefix' => 'admin', 'middleware' => ['aut
     Route::get('/unit-list-print/', 'AdminUnitsController@listPrint');
     Route::get('/unit-single-print/{id}', 'AdminUnitsController@singlePrint');
 
-    /* employees list */
-    Route::get('/employees/{page?}/{size?}', 'AdminEmployeesController@list');
-    /* single employees page for editing or viewing */
-    Route::get('/employee/{employeeId}/{page?}/{size?}', 'AdminEmployeesController@editGet')->where('employeeId', '[0-9]+');
-    Route::post('/employee/{employeeId}/{page?}/{size?}', 'AdminEmployeesController@editPost')->where('employeeId', '[0-9]+');
-    /* new employee page */
-    Route::get('/employee-new/{unitId?}', 'AdminEmployeesController@newGet');
-    Route::post('/employee-new', 'AdminEmployeesController@newPost');
+    /* artists list */
+    Route::get('/artists/{page?}', 'AdminArtistsController@list');
+    /* single artists page for editing or viewing */
+    Route::get('/artist/{ArtistId}/{page?}/{size?}', 'AdminArtistsController@editGet')->where('ArtistId', '[0-9]+');
+    Route::post('/artist/{ArtistId}/{page?}/{size?}', 'AdminArtistsController@editPost')->where('ArtistId', '[0-9]+');
+    /* new artist page */
+    Route::get('/artist-new/{unitId?}', 'AdminArtistsController@newGet');
+    Route::post('/artist-new', 'AdminArtistsController@newPost');
     /* print routes */
-    Route::get('/employee-list-print/', 'AdminEmployeesController@listPrint');
-    Route::get('/employee-single-print/{id}', 'AdminEmployeesController@singlePrint');
-    /* employee remove */
-    Route::get('/employee-remove/{employeeId}', 'AdminEmployeesController@remove');
+    Route::get('/artist-list-print/', 'AdminArtistsController@listPrint');
+    Route::get('/artist-single-print/{id}', 'AdminArtistsController@singlePrint');
+    /* Artist remove */
+    Route::get('/Artist-remove/{ArtistId}', 'AdminArtistsController@remove');
 
     /* backup routes */
     Route::get ('/backup', 'Backup@get');
@@ -108,19 +108,34 @@ Route::group(['namespace' => 'RegularMember', 'middleware' => 'auth'], function 
     Route::get('/unit-list-print/', 'NormalUnitsController@listPrint');
     Route::get('/unit-single-print/{id}', 'NormalUnitsController@singlePrint');
 
-    /* employees list */
-    Route::get('/employees/{page?}/{size?}', 'NormalEmployeesController@list');
-    /* single employees page for editing or viewing */
-    Route::get('/employee/{employeeId}/{page?}/{size?}', 'NormalEmployeesController@editGet')->where('employeeId', '[0-9]+');
-    Route::post('/employee/{employeeId}/{page?}/{size?}', 'NormalEmployeesController@editPost')->where('employeeId', '[0-9]+');
-    /* new employee page */
-    Route::get('/employee-new/{unitId?}', 'NormalEmployeesController@newGet');
-    Route::post('/employee-new', 'NormalEmployeesController@newPost');
+    /* Artists list */
+    Route::get('/Artists/{page?}/{size?}', 'NormalArtistsController@list');
+    /* single Artists page for editing or viewing */
+    Route::get('/Artist/{ArtistId}/{page?}/{size?}', 'NormalArtistsController@editGet')->where('ArtistId', '[0-9]+');
+    Route::post('/Artist/{ArtistId}/{page?}/{size?}', 'NormalArtistsController@editPost')->where('ArtistId', '[0-9]+');
+    /* new Artist page */
+    Route::get('/Artist-new/{unitId?}', 'NormalArtistsController@newGet');
+    Route::post('/Artist-new', 'NormalArtistsController@newPost');
 
     /* print routes */
-    Route::get('/employee-list-print', 'NormalEmployeesController@listPrint');
-    Route::get('/employee-single-print/{id}', 'NormalEmployeesController@singlePrint');
+    Route::get('/Artist-list-print', 'NormalArtistsController@listPrint');
+    Route::get('/Artist-single-print/{id}', 'NormalArtistsController@singlePrint');
 
+});
+
+Route::get('storage/{filename}', function ($filename)
+{
+    $path = storage_path('app') . '/storage/' . $filename;
+
+    if(!File::exists($path)) abort(404);
+
+    $file = File::get($path);
+    $type = File::mimeType($path);
+
+    $response = Response::make($file, 200);
+    $response->header("Content-Type", $type);
+
+    return $response;
 });
 
 Route::post('/login', 'HomeController@login');

@@ -8,39 +8,35 @@ use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Validator;
 use Illuminate\Support\Facades\Auth;
 
-class AdminEmployeesController extends Controller
+class AdminArtistsController extends Controller
 {
-    public function list(Request $request, $page=0, $size=10)
+    public function list(Request $request, $page=0)
     {
-        $group_code = Auth::user()->group_code;
-        $employees = DB::table('employees')
-            ->join('degrees', 'employees.degree', '=', 'degrees.id')
-            ->join('study_fields', 'employees.field', '=', 'study_fields.id')
-            ->join('cities', 'employees.habitate', '=', 'cities.id')
-            ->join('units', 'employees.unit_id', '=', 'units.id')
-            ->select(DB::raw("employees.id, employees.first_name, employees.last_name, degrees.title'degree', study_fields.title'field', units.title'unit', cities.title'habitate'"))
+        $size = 10;
+
+        $artists = DB::table('users')
+            ->join('artists', 'artists.id', '=', 'users.id')
+            ->select(['users.first_name', 'users.last_name', 'users.email', 'users.status', 'artists.*'])
+            ->where('users.group_code', '1')
             ->limit($size)
-            ->offset($page * $size);
+            ->offset(($page-1)*$size);
 
         if($request->has('sort')){
             $orders = preg_split('/,/', $request->input('sort'));
             foreach($orders as $order)
-            $employees = $employees->orderBy($order, 'asc');
+                $artists = $artists->orderBy($order, 'asc');
         }
-        $employees = $employees->get();
+        $artists = $artists->get();
+        $artistsCount = DB::table('users')->where('group_code', '1')->count();
 
-        $employeeCount = DB::table('employees')->count();
+        $pageCount = ceil($artistsCount / $size);
 
-        $pageCount = ceil($employeeCount / $size);
-
-        return view('admin.employees.list', [
-            'employees'     => $employees, 
-            'pageCount'     => $pageCount,
+        return view('admin.artists.list', [
+            'artists'       => $artists,
             'currentPage'   => $page,
-            'group_code'    => $group_code,
             'pageSize'      => $size,
             'pagination'    => $this->generatePages($pageCount, $page),
-            'pageCount'     => ceil($employeeCount / $size),
+            'pageCount'     => ceil($artistsCount / $size),
             'sort'          => $request->has('sort')? ('?sort=' . $request->input('sort')) : '',
             ]);
     }
