@@ -20,12 +20,12 @@
         }
     </style>
   </head>
-  <body class="teal lighten-5" style="direction: rtl;">
+  <body class="teal lighten-5" style="direction: rtl; background-image: url(http://localhost:8000/img/bg/6.jpg);">
     <div class="navbar-fixed">
         <nav class="nav-color">
             <div class="nav-wrapper nav-color">
                 <a href="{{url('dashboard')}}" class="brand-logo center">
-                    <img src="img/logo-big-white.png" alt="" class="responsive-img col" style="width : 5rem;"/>
+                    <img src="{{url('img/logo-big-white.png')}}" alt="" class="responsive-img col" style="width : 5rem;"/>
                 </a>
                 @if(Auth::user()->group_code == 2)
                 <div>
@@ -42,7 +42,7 @@
                     </ul>
                     <ul class="nav navbar-nav navbar-left">
                         <li>
-                            <button onClick={this.logout} class="glyphicon glyphicon-log-in btn cyan darken-4">خروج</button>
+                            <a style="margin-top: 10px;" href="{{url('logout')}}" class="waves-effect waves-light btn left">خروج</a>
                         </li>
                     </ul>
                     <ul class="right hide-on-large-only" style="padding-right: 0px;">
@@ -71,7 +71,7 @@
                     </ul>
                     <ul class="nav navbar-nav navbar-left">
                         <li>
-                            <button onClick={this.logout} class="glyphicon glyphicon-log-in btn cyan darken-4">خروج</button>
+                            <a style="margin-top: 10px;" href="{{url('logout')}}" class="waves-effect waves-light btn left">خروج</a>
                         </li>
                     </ul>
                     <ul class="right hide-on-large-only" style="padding-right: 0px;">

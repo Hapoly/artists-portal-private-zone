@@ -75,8 +75,8 @@
                                     @endif
                                 </td>
                                 <td>
-                                    <a href="{{url('artist/show/' . $artist->id)}}" class="waves-effect waves-light btn right">جزئیات</a>
-                                    <a href="{{url('artist/remove/' . $artist->id)}}" class="waves-effect waves-light btn right">حذف</a>
+                                    <a href="{{url('admin/artist/show/' . $artist->id)}}" class="waves-effect waves-light btn right" target="_blank">جزئیات</a>
+                                    <a href="{{url('admin/artist/remove/' . $artist->id)}}" class="waves-effect waves-light btn right">حذف</a>
                                     @if($artist->status == 1)
                                         <a href="{{url('artist/accept/' . $artist->id)}}" class="waves-effect waves-light btn right">تائید</a>
                                     @elseif($artist->status == 2)

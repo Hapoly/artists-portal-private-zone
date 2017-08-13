@@ -41,6 +41,33 @@ class AdminArtistsController extends Controller
             ]);
     }
 
+    public function view(Request $request, $id){
+        $artist = DB::table('users')
+            ->join('artists', 'artists.id', '=', 'users.id')
+            ->select(
+                [
+                    'users.first_name',
+                    'users.last_name',
+                    'users.status',
+                    'users.email',
+                    'artists.*',
+                ])
+            ->where('users.group_code', '=', '1')
+            ->where('users.id', '=', $id)
+            ->first();
+
+        $educations = DB::table('educations')->where('artist_id', $id)->get();
+        $art_fields = DB::table('art_fields')->where('artist_id', $id)->get();
+
+        $artist->religion = $this->get_religion_code($artist->religion);
+        $artist->habitate_place = $this->get_habitate_place_code($artist->habitate_place);
+
+        return view('admin.artists.view', [
+            'artist'        => $artist,
+            'educations'    => $educations,
+            'art_fields'    => $art_fields,
+        ]);
+    }
     public function editPost(Request $request, $id){
         $group_code = Auth::user()->group_code;
         $validator = $this->myValidate($request);
@@ -49,9 +76,6 @@ class AdminArtistsController extends Controller
             $oldInputs['id'] = $id;
 
             return view('admin.employees.edit', [
-                'group_code'                => $group_code,
-                'oldInputs'                 => $oldInputs,
-
                 'genders'                   => DB::table('genders')                     ->get(),
                 'certificateTypes'          => DB::table('certificate_types')           ->get(),
                 'business_license_sources'  => DB::table('business_license_sources')    ->get(),
@@ -97,31 +121,33 @@ class AdminArtistsController extends Controller
         }
     }
     public function editGet(Request $request, $id){
-        $group_code = Auth::user()->group_code;
-        $employee = get_object_vars(DB::table('employees')->where('id', '=', $id)->first());
+        $artist = DB::table('users')
+            ->join('artists', 'artists.id', '=', 'users.id')
+            ->select(
+                [
+                    'users.first_name',
+                    'users.last_name',
+                    'users.status',
+                    'users.email',
+                    'artists.*',
+                ])
+            ->where('users.group_code', '=', '1')
+            ->where('users.id', '=', $id)
+            ->first();
 
-        $employee['unit_title'] = DB::table('units')->where('id', '=', $employee['unit_id'])->first()->title;
-        $employee['field_title'] = DB::table('study_fields')->where('id', '=', $employee['field'])->first()->title;
+        $educations = DB::table('educations')->where('artist_id', $id)->get();
+        $art_fields = DB::table('art_fields')->where('artist_id', $id)->get();
 
-        $birth_date = explode('-', $employee['birth_date']);
-        $employee['birth_date_day']   = $birth_date[2];
-        $employee['birth_date_month'] = $birth_date[1];
-        $employee['birth_date_year']  = $birth_date[0];
+        $artist->religion = $this->get_religion_code($artist->religion);
+        $artist->habitate_place = $this->get_habitate_place_code($artist->habitate_place);
 
-        return view('admin.employees.edit', [
-            'group_code'                => $group_code,
-            'oldInputs'                 => $employee,
+        return view('admin.artists.edit', [
+            'name'          => $artist->first_name . ' ' . $artist->last_name,
+            'oldInputs'     => json_decode(json_encode($artist), True),
+            'educations'    => $educations,
+            'art_fields'    => $art_fields,
+        ]);
 
-            'genders'                   => DB::table('genders')                     ->get(),
-            'certificateTypes'          => DB::table('certificate_types')           ->get(),
-            'business_license_sources'  => DB::table('business_license_sources')    ->get(),
-            'habitates'                 => DB::table('cities')                      ->get(),
-            'degrees'                   => DB::table('degrees')                     ->get(),
-            'study_fields'              => DB::table('study_fields')                ->get(),
-            'job_fields'                => DB::table('job_fields')                  ->get(),
-            'marriges'                  => DB::table('merrige_types')               ->get(),
-            'months'                    => config('constants.months')
-            ]);
     }
 
     public function remove(Request $request, $id){
@@ -343,4 +369,28 @@ class AdminArtistsController extends Controller
             ])->render();
     }
 
+    public function get_religion_code($title){
+        $data = [
+            1 => "اسلام شیعه",
+            2 => "اسلام سنی",
+            3 => "مسیحیت",
+            4 => "کلیمی",
+            5 => "زرتشتی",
+            6 => "رضا",
+        ];
+        return $data[$title];
+    }
+
+    public function get_habitate_place_code($title){
+        $data = [
+            1 => "رشت",
+            2 => "آستانه",
+            3 => "انزلی",
+            4 => "صومعه سرا",
+            5 => "رودسر",
+            6 => "لاهیجان",
+            7 => "جیرده",
+        ];
+        return $data[$title];
+    }
 }

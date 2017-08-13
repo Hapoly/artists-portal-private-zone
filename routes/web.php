@@ -46,8 +46,9 @@ Route::group(['namespace' => 'Admin', 'prefix' => 'admin', 'middleware' => ['aut
     /* artists list */
     Route::get('/artists/{page?}', 'AdminArtistsController@list');
     /* single artists page for editing or viewing */
-    Route::get('/artist/{ArtistId}/{page?}/{size?}', 'AdminArtistsController@editGet')->where('ArtistId', '[0-9]+');
-    Route::post('/artist/{ArtistId}/{page?}/{size?}', 'AdminArtistsController@editPost')->where('ArtistId', '[0-9]+');
+    Route::get('/artist/show/{ArtistId}', 'AdminArtistsController@view')->where('ArtistId', '[0-9]+');
+    Route::get('/artist/edit/{ArtistId}', 'AdminArtistsController@editGet')->where('ArtistId', '[0-9]+');
+    Route::post('/artist/edit/{ArtistId}', 'AdminArtistsController@editPost')->where('ArtistId', '[0-9]+');
     /* new artist page */
     Route::get('/artist-new/{unitId?}', 'AdminArtistsController@newGet');
     Route::post('/artist-new', 'AdminArtistsController@newPost');

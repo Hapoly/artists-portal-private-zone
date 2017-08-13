@@ -20,7 +20,7 @@
         }
     </style>
   </head>
-  <body class="teal lighten-5" style="direction: rtl;">
+  <body class="teal lighten-5" style="direction: rtl; background-image: url(http://localhost:8000/img/bg/12.jpg);">
     <div class="top-buffer row">
         <div class="row">
             <div class="col s12 m4 offset-m4">
@@ -71,15 +71,15 @@
                             {{ csrf_field() }}
                             <div class="row">
                                 <div class="col s12">
-                                    <div class="row"> 
-                                        <div class="input-field col s6">
-                                            <input id="login_password" name="password" type="password" class="validate"/>
-                                            <label for="login_password">رمز عبور</label>
-                                        </div>
-                                        <div class="input-field col s6">
+                                    <div class="row">
+                                        <div class="input-field col s6 right">
                                             <input  id="login_userName" name="email" type="text" class="validate"/>
                                             <label for="login_userName">آدرس ایمیل</label>
                                         </div> 
+                                        <div class="input-field col s6 right">
+                                            <input id="login_password" name="password" type="password" class="validate"/>
+                                            <label for="login_password">رمز عبور</label>
+                                        </div>
                                     </div>
                                     <div class="row">
                                         <button class="btn waves-effect waves-light" type="submit" >ورود
