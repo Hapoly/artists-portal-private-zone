@@ -21,28 +21,21 @@
 </style>
 <div class="top-buffer row">
     <div class="col s12 m8 offset-m2">
+        <nav>
+            <div class="nav-wrapper teal">
+                <form method="get" action="{{url('admin/artists/' . $sort)}}">
+                    <div class="input-field">
+                        <input placeholder="جتسجوی نام و نام خانوادگی" style="text-align: center; line-height: 60px; height: 60px;" name="search" type="search" required>
+                        <label class="label-icon" for="search"><i class="material-icons">search</i></label>
+                        <i class="material-icons">close</i>
+                    </div>
+                </form>
+            </div>
+        </nav>
+    </div>
+    <div class="col s12 m8 offset-m2">
         <div class="card-panel white">
             @if (sizeof($artists) > 0)
-                <div class="row">
-                    <form class="col s12">
-                        <div class="row">
-                            <div class="center-align input-field col s12 m6">
-                                <select>
-                                    <option value="" disabled selected>همه</option>
-                                    <option value="1">تایید نشده</option>
-                                    <option value="2">فعال</option>
-                                    <option value="3">محروم از حضور</option>
-                                    <option value="3">حذف شده</option>
-                                </select>
-                                <label>وضعیت</label>
-                            </div>
-                            <div class="input-field col s12 m6">
-                                <input id="name" type="text" class="validate">
-                                <label for="name">جستجو براساس نام</label>
-                            </div>
-                        </div>
-                    </form>
-                </div>
                 <table>
                     <thead>
                     <tr>

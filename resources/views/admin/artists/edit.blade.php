@@ -24,9 +24,7 @@
         <div class="row">
             <div class="col s12 m6 offset-m3 top-buffer">
                 <div class="card-panel green darken-3 white-text">
-                    <p>ثبت نام با موفیقت انجام شد</p>
-                    <p>هنرمند محترم. درخواست شما برای ثبت نام در سامانه هنرمندان منطقه آزاد انزلی با موفقیت ارسال شد. کارشناسان مربوطه در اسرع وقت با بررسی اطلاعات ارسال شده توسط شما، با درخواست شما موافقت کرده و شما را از طریق ایمیل آگاه خواهند ساخت</p>
-                    <p>با تشکر</p>
+                    <p>ویرایش با موفقیت انجام شد</p>
                 </div>
             </div>
         </div>
@@ -36,7 +34,7 @@
         <div class="col s12 m6 offset-m3">
             <div class="card-panel white">
                 <div class="row">
-                    <form action="{{url('register')}}" method="post" enctype="multipart/form-data">
+                    <form action="{{url('admin/artist/edit/' . $id)}}" method="post" enctype="multipart/form-data">
                     {{ csrf_field() }}
                     <div class="row">
                         <div class="col s12">
@@ -153,10 +151,10 @@
                             </div>
                             <div class="row">
                                 <div class="col m6 s12">
-                                    <img class="responsive-img" src="{{url($oldInputs['profile'])}}" />
+                                    <img class="responsive-img" src="{{isset($oldInputs['profile_pic'])?url($oldInputs['profile_pic']):url($artist->profile)}}" />
                                 </div>
                                 <div class="col m6 s12">
-                                    <img class="responsive-img" src="{{url($oldInputs['id_card'])}}" />
+                                    <img class="responsive-img" src="{{isset($oldInputs['id_card_pic'])?url($oldInputs['id_card_pic']):url($artist->id_card)}}" />
                                 </div>
                             </div>
                             <div class="row">
@@ -172,29 +170,29 @@
     </div>
 </div>
 <script>
-$('.chips').on('chip.add', function(e, chip){
+function updateChips(){
     var tags = $('.art-fields-autocomplete').material_chip('data');
     $('#art-fields').val(JSON.stringify(tags.map(art_field_chip_to_text)));
 
+    console.log(tags);
+    
     var tags = $('.educations-autocomplete').material_chip('data');
     $('#educations').val(JSON.stringify(tags.map(educations_chip_to_text)));
+
+    console.log(tags);
+}
+$('.chips').on('chip.add', function(e, chip){
+    updateChips();
 });
 
 $('.chips').on('chip.delete', function(e, chip){
-    var tags = $('.art-fields-autocomplete').material_chip('data');
-    $('#art-fields').val(JSON.stringify(tags.map(art_field_chip_to_text)));
-
-    var tags = $('.educations-autocomplete').material_chip('data');
-    $('#educations').val(JSON.stringify(tags.map(educations_chip_to_text)));
+    updateChips();
 });
 
 $('.chips').on('chip.select', function(e, chip){
-    var tags = $('.art-fields-autocomplete').material_chip('data');
-    $('#art-fields').val(JSON.stringify(tags.map(art_field_chip_to_text)));
-
-    var tags = $('.educations-autocomplete').material_chip('data');
-    $('#educations').val(JSON.stringify(tags.map(educations_chip_to_text)));
+    updateChips();
 });
+
 $(document).ready(function(){
     $('.art-fields-autocomplete').material_chip({
         placeholder: '+ حرفه های بیشتر',
@@ -259,6 +257,7 @@ $(document).ready(function(){
             @endforeach
         ],
     });
+    updateChips();
 });
 </script>
 @endsection
