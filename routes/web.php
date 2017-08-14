@@ -18,31 +18,6 @@ Route::post('/profile', 'HomeController@profilePost')->middleware('auth');
 Route::group(['namespace' => 'Admin', 'prefix' => 'admin', 'middleware' => ['auth', 'check-admin']], function () {
     // Controllers Within The "App\Http\Controllers\Admin" Namespace
     
-    /* users list */
-    Route::get('/users', 'AdminUsersController@list');
-    /* single user page for editing or viewing */
-    Route::get ('/user/{userId}/{watching?}/{page?}/{size?}', 'AdminUsersController@editGet')->where('unitId', '[0-9]+');
-    Route::post('/user/{userId}/{watching?}/{page?}/{size?}', 'AdminUsersController@editPost')->where('unitId', '[0-9]+');
-    /* new user page */
-    Route::get('/user-new', 'AdminUsersController@newGet');
-    Route::post('/user-new', 'AdminUsersController@newPost');
-    /* remove the user */
-    Route::post('/user-remove/{userId}', 'AdminUsersController@remove');
-
-    /* units list */
-    Route::get('/units/{page?}/{size?}', 'AdminUnitsController@list');
-    /* single unit page for editing or viewing */
-    Route::get ('/unit/{unitId}/{page?}/{size?}', 'AdminUnitsController@editGet')->where('unitId', '[0-9]+');
-    Route::post('/unit/{unitId}/{page?}/{size?}', 'AdminUnitsController@editPost')->where('unitId', '[0-9]+');
-    /* new unit page */
-    Route::get('/unit-new', 'AdminUnitsController@newGet');
-    Route::post('/unit-new', 'AdminUnitsController@newPost');
-    /* remove unit */
-    Route::get('/unit-remove/{id}', 'AdminUnitsController@remove');
-    /* print routes */
-    Route::get('/unit-list-print/', 'AdminUnitsController@listPrint');
-    Route::get('/unit-single-print/{id}', 'AdminUnitsController@singlePrint');
-
     /* artists list */
     Route::get('/artists/{page?}', 'AdminArtistsController@list');
     /* single artists page for editing or viewing */
@@ -53,9 +28,6 @@ Route::group(['namespace' => 'Admin', 'prefix' => 'admin', 'middleware' => ['aut
     /* new artist page */
     Route::get ('/artist-new', 'AdminArtistsController@newGet' );
     Route::post('/artist-new', 'AdminArtistsController@newPost');
-    /* print routes */
-    Route::get('/artist-list-print/', 'AdminArtistsController@listPrint');
-    Route::get('/artist-single-print/{id}', 'AdminArtistsController@singlePrint');
     /* Artist remove */
     Route::get('/artist-remove/{ArtistId}', 'AdminArtistsController@remove');
     Route::get('/artist-accept/{ArtistId}', 'AdminArtistsController@accept');
@@ -63,36 +35,24 @@ Route::group(['namespace' => 'Admin', 'prefix' => 'admin', 'middleware' => ['aut
     Route::get('/artist-active/{ArtistId}', 'AdminArtistsController@active');
     Route::get('/artist-recylce/{ArtistId}', 'AdminArtistsController@recylce');
 
-    /* backup routes */
-    Route::get ('/backup', 'Backup@get');
-    Route::post('/backup', 'Backup@post');
+    /* events list */
+    Route::get('/events/{page?}', 'AdminEventsController@list');
+    /* single artists page for editing or viewing */
+    Route::get ('/event/show/{eventId}', 'AdminEventsController@view')->where('eventId', '[0-9]+');
+    
+    Route::get ('/event/edit/{eventId}', 'AdminEventsController@editGet')->where('eventId', '[0-9]+');
+    Route::post('/event/edit/{eventId}', 'AdminEventsController@editPost')->where('eventId', '[0-9]+');
+    /* new event page */
+    Route::get ('/event-new', 'AdminEventsController@newGet' );
+    Route::post('/event-new', 'AdminEventsController@newPost');
+    /* event remove */
+    Route::get('/event-remove/{eventId}', 'AdminEventsController@remove');
+    Route::get('/event-accept/{eventId}', 'AdminEventsController@accept');
+    Route::get('/event-deactive/{eventId}', 'AdminEventsController@ban');
+    Route::get('/event-active/{eventId}', 'AdminEventsController@active');
+    Route::get('/event-recylce/{eventId}', 'AdminEventsController@recylce');
 
-    /* reporets page */
-    Route::get ('/report/{id}', 'Reports@use');
-    Route::get ('/report-remove/{id}', 'Reports@remove');
-    Route::get  ('/report-new', 'Reports@newGet');
-    Route::post ('/report-new', 'Reports@newPost');
-    Route::get  ('/report-edit/{id}', 'Reports@editGet');
-    Route::post ('/report-edut/{id}', 'Reports@editPost');
-    Route::get ('/reports/{page?}/{size?}', 'Reports@list');
-    /*
-    Route::group(['namespace' => 'Report', 'prefix' => 'reports'], function () {
-        Route::get('/genders', 'Genders@all');
-        Route::get('/genders-list', 'Genders@allList');
-
-        Route::get('/genders-field', 'Genders@studyField');
-        Route::get('/genders-field-list', 'Genders@studyFieldList');
-
-        Route::get('/genders-degree', 'Genders@degree');
-        Route::get('/genders-degree-list', 'Genders@degreeList');
-
-        Route::get('/genders-habitate', 'Genders@habitate');
-        Route::get('/genders-habitate-list', 'Genders@habitateList');
-        
-        Route::get('/genders-job', 'Genders@job');
-        Route::get('/genders-job-list', 'Genders@jobList');
-    });
-    */
+    
 });
 
 /* ====================  regular panels  =============================*/

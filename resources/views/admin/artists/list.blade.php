@@ -91,7 +91,9 @@
                 </ul>
 
             @else
-                <span>هیچ هنرمندی ثبت نشده است</span>
+            <div class="row center-align">
+                <span>هیچ هنرمند ثبت نشده است</span>
+            </div>
             @endif
             <a href="{{url('admin/artist-new/')}}" class="waves-effect waves-light btn right" target="_blank">هنرمند جدید</a>
         </div>

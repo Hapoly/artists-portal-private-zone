@@ -13,7 +13,7 @@
     <script type="text/javascript" src="js/jquery-2.1.1.min.js"></script>
     <script type="text/javascript" src="js/materialize.min.js"></script>
     <script type="text/javascript" src="js/functions.js"></script>
-    <title>{{ config('app.name', 'هنرمندان') }}</title>
+    <title>هنرمندان</title>
     <style>
         body {
             font-family: '0 Roya', tahoma, Arial;

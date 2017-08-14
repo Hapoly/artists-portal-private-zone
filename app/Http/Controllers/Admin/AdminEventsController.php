@@ -9,39 +9,42 @@ use Illuminate\Support\Facades\Validator;
 use Illuminate\Support\Facades\Auth;
 use App\User;
 
-class AdminArtistsController extends Controller
+class AdminEventsController extends Controller
 {
+    /* events status
+        1 -> pending for accept
+        2 -> active
+        3 -> deactive
+        4 -> removed
+    */
     public function list(Request $request, $page=1)
     {
         $size = 10;
 
-        $artists = DB::table('users')
-            ->join('artists', 'artists.id', '=', 'users.id')
-            ->select(['users.first_name', 'users.last_name', 'users.email', 'users.status', 'artists.*'])
-            ->where('users.group_code', '1')
+        $events = DB::table('events')
             ->limit($size)
             ->offset(($page-1)*$size);
 
         if($request->has('sort')){
             $orders = preg_split('/,/', $request->input('sort'));
             foreach($orders as $order)
-                $artists = $artists->orderBy($order, 'asc');
+                $events = $events->orderBy($order, 'asc');
         }
 
         if($request->has('search')){
             $search = $request->input('search');
-            $artists = $artists->whereRaw("users.first_name LIKE '%$search%' OR users.last_name LIKE '%$search%'");
+            $events = $events->whereRaw("events.title '%$search%'");
         }
-        $artists = $artists->get();
-        $artistsCount = DB::table('users')->where('group_code', '1')->count();
+        $events = $events->get();
+        $eventsCount = DB::table('events')->count();
 
-        $pageCount = ceil($artistsCount / $size);
+        $pageCount = ceil($eventsCount / $size);
 
-        return view('admin.artists.list', [
-            'artists'       => $artists,
+        return view('admin.events.list', [
+            'events'       => $events,
             'page'          => $page,
             'pageSize'      => $size,
-            'pageCount'     => ceil($artistsCount / $size),
+            'pageCount'     => ceil($eventsCount / $size),
             'sort'          => $request->has('sort')? ('?sort=' . $request->input('sort')) : '',
             ]);
     }
@@ -234,54 +237,37 @@ class AdminArtistsController extends Controller
     }
 
     public function newGet(Request $request){
-        return view('admin.artists.new',[
-            'art_fields' => [],
-            'educations' => [],
+        return view('admin.events.new',[
+                'art_fields' => [],
             ]);
     }
 
     public function newPost(Request $request){
-        $validator = $this->myNewArtistValidate($request);
+        $validator = $this->myNewEventValidate($request);
         if($validator->fails()){
             $oldInputs = $request->all();
-            $oldInputs['educations'] = json_decode($oldInputs['educations']);
             $oldInputs['art-fields'] = json_decode($oldInputs['art-fields']);
-            //die(json_encode($oldInputs));
 
-            return view('admin.artists.new', [
+            return view('admin.events.new', [
                 'oldInputs'                 => $oldInputs,
                 'error_type'                => 'fail',
                 ])->withErrors($validator);
 
         }else{
+            $id = DB::table('events')->insertGetId([
+                    'title'         => $request->input('title'),
+                    'description'   => $request->input('description'),
+                    'start'         => $request->input('start_day') . '-' .
+                                       $request->input('start_month') . '-' .
+                                       $request->input('start_year'),
+                    'end'           => $request->input('end_day') . '-' .
+                                       $request->input('end_month') . '-' .
+                                       $request->input('end_year'),
+                    'status'        => 2
 
-            $id = User::create([
-                'first_name'        => $request->input('first_name'),
-                'last_name'         => $request->input('last_name'),
-                'email'             => $request->input('email'),
-                'password'          => bcrypt($request->input('password')),
-                'group_code'        => 1
-            ])->id;
-            DB::table('artists')->insert([
-                'id'                => $id,
-                'father_name'       => $request->input('father_name'),
-                'nickname'          => $request->input('nickname'),
-                'religion'          => $this->get_religion_title($request->input('religion')),
-                'habitate_years'    => $request->input('habitate_years'),
-                'habitate_place'    => $this->get_habitate_place_title($request->input('habitate_place')),
-                'phone'             => $request->input('phone'),
-                'cellphone'         => $request->input('cellphone'),
-                'address'           => $request->input('address'),
-                'birth_day'         => $request->input('birth_day'),
-                'birth_month'       => $request->input('birth_month'),
-                'birth_year'        => $request->input('birth_year'),
-                'birth_place'       => $request->input('birth_place'),
-                'profile'           => $request->file('profile_pic')->store('storage'),
-                'id_card'           => $request->file('id_card_pic')->store('storage'),
-            ]);
-
+                ]);
+            
             $art_fields = json_decode($request->input('art-fields'));
-            $educations = json_decode($request->input('educations'));
             foreach ($art_fields as $art_field) {
                 DB::table('art_fields')->insert([
                     'artist_id'         => $id,
@@ -290,15 +276,20 @@ class AdminArtistsController extends Controller
                 ]);
             }
 
-            foreach ($educations as $education) {
-                DB::table('educations')->insert([
-                    'artist_id'         => $id,
-                    'education_id'      => $education->id,
-                    'education_title'   => $education->title,
-                ]);
+            if($request->hasFile('images')){
+                $images = [];
+                foreach($request->file('images') as $image){
+                    $path = $image->store('storage');
+                    DB::table('event_images')->insert([
+                        'event_id' => $id,
+                        'name' => $path
+                    ]);
+                    array_push($images, $path);
+                }
+                $oldInputs['images'] = $images;
             }
 
-            return redirect()->intended('admin/artist/show/' . $id);
+            return redirect()->intended('admin/event/show/' . $id);
         }
     }
     public function myArtistEditValidate($request){
@@ -346,121 +337,41 @@ class AdminArtistsController extends Controller
         return $validator;
     }
 
-    public function myNewArtistValidate($request){
+    public function myNewEventValidate($request){
         $messages = [
-            'first_name.*'                  => 'لطفا نام را وارد کنید',
-            'last_name.*'                   => 'لطفا نام خانوادگی کاربر را وارد کنید',
-            'email.*'                       => 'آدرس ایمیل نامعتبر',
-            'father_name.*'                 => 'لطفا نام پدر خود را وارد کنید',
-            'nickname.*'                    => 'نام هنری خود را وارد کنید',
+            'title.*'                     => 'لطفا عنوان را انتخاب کنید',
+            'description.*'               => 'لطفا توضیحات را وارد کنید',
+            'art-fields.*'                => 'لطفا حداقل یک حوزه هنری برای رویداد انتخاب کنید',
 
-            'religion.*'                    => 'مذهب نامعتبر است',
-            'habitate_years.*'              => 'سال های سکونت نامعتبر است',
-            'habitate_place.*'              => 'محل سکونت نامعتبر است',
-            'phone.*'                       => 'شماره تماس همراه نامعتبر است',
-            'cellphone.*'                   => 'شماره تلفن ثابت نامعتبر است',
-
-            'address.*'                     => 'آدرس نامعتبر است',
-            'birth_day.*'                   => 'روز تولد نامعتبر است',
-            'birth_month.*'                 => 'ماه تولد نامعتبر است',
-            'birth_year.*'                  => 'سال تولد نامعتبر است',
-            'birth_place.*'                 => 'محل تولد را وارد کنید',
-            'profile_pic.*'                 => 'عکس پرسنلی خود را انتخاب کنید',
-            'id_card_pic.*'                 => 'اسکن کارت ملی خود را آپلود کنید',
-
-            'password.*'                    => 'لطفا کلمه عبور را وارد کنید(حداقل ۴ حرف)',
-            'password_conf.*'               => 'کلمات عبور یکسان نیستند',
+            'start_day.*'                 => 'لطفا روز شروع را انتخاب کنید',
+            'start_month.*'               => 'لطفا ماه شروع رویداد را انتخاب کنید',
+            'start_year.*'                => 'لطفا سال شروع رویداد را انتخاب کنید',
+            
+            'end_day.*'                   => 'لطفا روز پایان رویداد را انتخاب کنید',
+            'end_month.*'                 => 'لطفا ماه پایان رویداد را انتخاب کنید',
+            'end_year.*'                  => 'لطفا سال پایان رویداد را انتخاب کنید',
+            
+            'images.*'                    => 'لطفا برای رویداد حداقل یک تصویر ضمیمه قرار دهید',
         ];
-
         $rules = [
-            'first_name'                  => 'required',
-            'last_name'                   => 'required',
-            'email'                       => 'required|email|unique',
-            'father_name'                 => 'required',
-            'nickname'                    => 'required',
+            'title'                       => 'required',
+            'description'                 => 'required',
+            'art-fields'                  => 'required|not_in:[]',
 
-            'religion'                    => 'required',
-            'habitate_years'              => 'required',
-            'habitate_place'              => 'required',
-            'phone'                       => 'required',
-            'cellphone'                   => 'required',
+            'start_day'                   => 'required|numeric',
+            'start_month'                 => 'required|numeric',
+            'start_year'                  => 'required|numeric',
+            
+            'end_day'                     => 'required|numeric',
+            'end_month'                   => 'required|numeric',
+            'end_year'                    => 'required|numeric',
+            
+            'images'                      => 'required',            
 
-            'address'                     => 'required',
-            'birth_day'                   => 'required|numeric',
-            'birth_month'                 => 'required|numeric',
-            'birth_year'                  => 'required|numeric',
-            'birth_place'                 => 'required',
-            'password'                    => 'required|string|min:4',
         ];
         $validator = Validator::make($request->all(), $rules, $messages);
 
         return $validator;
-    }
-
-    function generatePages($total, $current){
-        if($total > 1){
-            $total=intval($total);
-
-            $output=[];
-            $current_page= (false == isset($current)) ? 0 : $current;
-            $lastPage = -1;
-            $lower = $current_page -3;
-            $upper = $current_page +3;
-            for($page=0;$page<$total;$page++){
-                if(($page > $lower && $page < $upper) || $page < 1 || $page > ($total-2)){
-                    if($lastPage + 1 != $page)
-                        array_push($output, '#');
-                    array_push($output, $page+1);
-                    $lastPage = $page;
-                }
-            }
-            return $output;
-        }else{
-            return [];
-        }
-    }
-
-    public function listPrint(Request $request){
-        $startPage  = $request->input('startPage');
-        $endPage    = $request->input('endPage');
-        $pageSize   = $request->input('pageSize');
-
-        $offset = $startPage * $pageSize;
-        $limit = $pageSize * ($endPage - $startPage + 1);
-        $employees = DB::table('employees')
-            ->offset($offset)
-            ->limit($limit)
-            ->get();
-
-        for($i=0; $i<sizeof($employees); $i++){
-            $employees[$i]->unitTitle = DB::table('units')->where('id', '=', $employees[$i]->unit_id)->first()->title;
-        }
-
-        return view('prints/list-employee', [
-            'employees'         => $employees,
-            'field'             => $this->prettify(DB::table('study_fields')->get()),
-            'degree'            => $this->prettify(DB::table('degrees')->get()),
-            'job'               => $this->prettify(DB::table('job_fields')->get()),
-            'marrige'           => $this->prettify(DB::table('merrige_types')->get()),
-            'habitate'          => $this->prettify(DB::table('cities')->get()),
-            'gender'            => $this->prettify(DB::table('genders')->get()),
-            'complete'          => $request->has('complete')? true : false,
-            ])->render();
-    }
-
-    public function singlePrint($id){
-        $employee = DB::table('employees')->where('id', '=', $id)->first();
-        $unitTitle = DB::table('units')->where('id', '=', $employee->unit_id)->first()->title;
-        return view('prints/single-employee', [
-            'info'              => $employee,
-            'field'             => $this->prettify(DB::table('study_fields')->get()),
-            'degree'            => $this->prettify(DB::table('degrees')->get()),
-            'job'               => $this->prettify(DB::table('job_fields')->get()),
-            'marrige'           => $this->prettify(DB::table('merrige_types')->get()),
-            'habitate'          => $this->prettify(DB::table('cities')->get()),
-            'gender'            => $this->prettify(DB::table('genders')->get()),
-            'unitTitle'         => $unitTitle,
-            ])->render();
     }
 
     public function get_religion_code($code){

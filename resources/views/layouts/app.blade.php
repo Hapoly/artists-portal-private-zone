@@ -60,7 +60,7 @@
                         <li><a href="{{url('admin/profile')}}">{{Auth::user()->first_name}} {{Auth::user()->last_name}}</a></li>
                     </ul>
                 </div>
-                @elseif($group_code == 1)
+                @elseif(Auth::user()->group_code == 1)
                 <div>
                     <ul class="right hide-on-med-and-down title-text">
                         <li><a href="{{url('user/reports')}}">گزارشات</a></li>
