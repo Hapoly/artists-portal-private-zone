@@ -1,0 +1,4 @@
+
+Auth::routes();
+
+Route::get('/dashboard', 'HomeController@dashboard')->name('dashboard');
