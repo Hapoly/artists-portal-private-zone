@@ -1,7 +1,7 @@
 @extends('layouts.app')
 
 @section('title')
-{{$name}}
+{{$title}}
 @endsection
 
 @section('content')
@@ -24,7 +24,7 @@
         <div class="row">
             <div class="col s12 m6 offset-m3 top-buffer">
                 <div class="card-panel green darken-3 white-text">
-                    <p>ویرایش با موفقیت انجام شد</p>
+                    <p>رویداد ویرایش شد</p>
                 </div>
             </div>
         </div>
@@ -34,131 +34,79 @@
         <div class="col s12 m6 offset-m3">
             <div class="card-panel white">
                 <div class="row">
-                    <form action="{{url('admin/artist/edit/' . $id)}}" method="post" enctype="multipart/form-data">
+                    <form action="{{url('admin/event/edit/' . $id)}}" method="post" enctype="multipart/form-data">
                     {{ csrf_field() }}
                     <div class="row">
                         <div class="col s12">
                             <div class="row"> 
-                                <div class="input-field col m6 s12 right">
-                                    <input  id="reg_firstname" name="first_name" type="text" class="validate"
-                                    value="{{isset($oldInputs)?$oldInputs['first_name']:''}}"/>
-                                    <label for="reg_firstname">* نام</label>
-                                </div>
-                                <div class="input-field col m6 s12 right">
-                                    <input id="reg_lastname" name="last_name" type="text" class="validate"
-                                    value="{{isset($oldInputs)?$oldInputs['last_name']:''}}"/>
-                                    <label for="reg_lastname">* نام خانوادگی</label>
-                                </div>
-                            </div>
-
-                            <div class="row"> 
-                                <div class="input-field col m6 s12 right">
-                                    <input  id="reg_fathername" name="father_name" type="text" class="validate"
-                                    value="{{isset($oldInputs)?$oldInputs['father_name']:''}}"/>
-                                    <label for="reg_fathername">* نام پدر</label>
-                                </div>
-                                <div class="input-field col m6 s12 right">
-                                    <input id="reg_artname" name="nickname" type="text" class="validate"
-                                    value="{{isset($oldInputs)?$oldInputs['nickname']:''}}"/>
-                                    <label for="reg_artname">* نام هنری</label>
-                                </div>
-                            </div>
-                                <div class="row">
-                                    <div class="chips chips-autocomplete art-fields-autocomplete"></div>
-                                    <input hidden id="art-fields" name="art-fields" value="[]"></input>
-                                </div>
-                            <div class="row">
-                                <div class="input-field col s12">
-                                    <input type="text" id="religion" name="religion" class="autocomplete religion-autocomplete"
-                                    value="{{isset($oldInputs)?$oldInputs['religion']:''}}"/>
-                                    <label for="autocomplete-input">* مذهب</label>
-                                </div>
-                            </div>
-                            <div class="row">
-                                <div class="input-field col m6 s12 right">
-                                    <input id="habitate_years" name="habitate_years" type="number" class="validate"
-                                    value="{{isset($oldInputs)?$oldInputs['habitate_years']:''}}"/>
-                                    <label for="habitate_years">* سال های سکونت</label>
-                                </div>
-                                <div class="input-field col m6 s12 right">
-                                    <input type="text" id="habitate_place" name="habitate_place" class="autocomplete habitate-autocomplete"
-                                    value="{{isset($oldInputs)?$oldInputs['habitate_place']:''}}"/>
-                                    <label for="habitate_place">* محل سکونت</label>
-                                </div>
-                            </div>
-                            <div class="row"> 
-                                <div class="input-field col m6 s12 right">
-                                    <input  id="phone" type="text" name="phone" class="validate"
-                                    value="{{isset($oldInputs)?$oldInputs['phone']:''}}"/>
-                                    <label for="phone">* شماره تماس ثابت</label>
-                                </div>
-                                <div class="input-field col m6 s12 right">
-                                    <input id="cellphone" type="text" name="cellphone" class="validate"
-                                    value="{{isset($oldInputs)?$oldInputs['cellphone']:''}}"/>
-                                    <label for="cellphone">* شماره همراه</label>
-                                </div>
-                            </div>
-                            <div class="row"> 
                                 <div class="input-field col m12 s12 right">
-                                    <input id="address" type="text" name="address" class="validate"
-                                    value="{{isset($oldInputs)?$oldInputs['address']:''}}"/>
-                                    <label for="address">* آدرس</label>
+                                    <input  id="title" name="title" type="text" class="validate"
+                                    value="{{isset($oldInputs)?$oldInputs['title']:''}}"/>
+                                    <label for="title">* عنوان</label>
                                 </div>
                             </div>
                             <div class="row">
-                                <div class="chips chips-autocomplete educations-autocomplete"></div>
-                                <input hidden id="educations" name="educations" value="[]"></input>
+                                <form class="col s12">
+                                    <div class="row">
+                                        <div class="input-field col s12">
+                                            <textarea id="description" name="description" class="materialize-textarea">{{isset($oldInputs)?$oldInputs['description']:''}}</textarea>
+                                            <label for="description">توضیحات</label>
+                                        </div>
+                                    </div>
+                                </form>
+                            </div>
+                            <div class="row">
+                                <div class="chips chips-autocomplete art-fields-autocomplete"></div>
+                                <input hidden id="art-fields" name="art-fields" value="[]"></input>
+                            </div>
+                            <blockquote>
+                                لطفا تاریخ شروع و پایان رویداد را ذکر کنید
+                            </blockquote>
+                            <div class="row"> 
+                                <div class="input-field col m4 s6 right">
+                                    <input  id="start_day" type="number" name="start_day" min="1" class="validate"
+                                    value="{{isset($oldInputs)?$oldInputs['start_day']:''}}"/>
+                                    <label for="start_day">* روز شروع</label>
+                                </div>
+                                <div class="input-field col m4 s6 right">
+                                    <input id="start_month" type="number" name="start_month" min="1" max="12" class="validate"
+                                    value="{{isset($oldInputs)?$oldInputs['start_month']:''}}"/>
+                                    <label for="start_month">* ماه شروع</label>
+                                </div>
+                                <div class="input-field col m4 s6 right">
+                                    <input id="start_year" type="number" name="start_year" min="1300" class="validate"
+                                    value="{{isset($oldInputs)?$oldInputs['start_year']:''}}"/>
+                                    <label for="start_year">* سال شروع</label>
+                                </div>
                             </div>
                             <div class="row"> 
-                                <div class="input-field col m3 s6 right">
-                                    <input  id="birth_day" type="number" name="birth_day" min="1" class="validate"
-                                    value="{{isset($oldInputs)?$oldInputs['birth_day']:''}}"/>
-                                    <label for="birth_day">* روز تولد</label>
+                                <div class="input-field col m4 s6 right">
+                                    <input  id="end_day" type="number" name="end_day" min="1" class="validate"
+                                    value="{{isset($oldInputs)?$oldInputs['end_day']:''}}"/>
+                                    <label for="end_day">* روز پایانی</label>
                                 </div>
-                                <div class="input-field col m3 s6 right">
-                                    <input id="birth_month" type="number" name="birth_month" min="1" max="12" class="validate"
-                                    value="{{isset($oldInputs)?$oldInputs['birth_month']:''}}"/>
-                                    <label for="birth_month">* ماه تولد</label>
+                                <div class="input-field col m4 s6 right">
+                                    <input id="end_month" type="number" name="end_month" min="1" max="12" class="validate"
+                                    value="{{isset($oldInputs)?$oldInputs['end_month']:''}}"/>
+                                    <label for="end_month">* ماه پایاین</label>
                                 </div>
-                                <div class="input-field col m3 s6 right">
-                                    <input id="birth_year" type="number" name="birth_year" min="1300" class="validate"
-                                    value="{{isset($oldInputs)?$oldInputs['birth_year']:''}}"/>
-                                    <label for="birth_year">* سال تولد</label>
-                                </div>
-                                <div class="input-field col m3 s6 right">
-                                    <input id="birth_place" type="text" name="birth_place" class="validate"
-                                    value="{{isset($oldInputs)?$oldInputs['birth_place']:''}}"/>
-                                    <label for="birth_place">* محل تولد</label>
+                                <div class="input-field col m4 s6 right">
+                                    <input id="end_year" type="number" name="end_year" min="1300" class="validate"
+                                    value="{{isset($oldInputs)?$oldInputs['end_year']:''}}"/>
+                                    <label for="end_year">* سال پایاین</label>
                                 </div>
                             </div>
                             <div class="file-field input-field row">
                                 <div class="btn">
-                                    <span>عکس پرسنلی</span>
-                                    <input id="profile_pic" name="profile_pic" type="file"/>
-                                </div>
-                                <div class="file-path-wrapper">
-                                    <input class="file-path validate" type="text"/>
-                                </div>
-                            </div>
-                            <div class="file-field input-field row">
-                                <div class="btn">
-                                    <span>اسکن کارت ملی</span>
-                                    <input id="id_card_pic" name="id_card_pic" type="file"/>
+                                    <span>تصاویر و ضمیمه</span>
+                                    <input id="images" name="images[]" type="file" multiple/>
                                 </div>
                                 <div class="file-path-wrapper">
                                     <input class="file-path validate" type="text"/>
                                 </div>
                             </div>
                             <div class="row">
-                                <div class="col m6 s12">
-                                    <img class="responsive-img" src="{{isset($oldInputs['profile_pic'])?url($oldInputs['profile_pic']):url($artist->profile)}}" />
-                                </div>
-                                <div class="col m6 s12">
-                                    <img class="responsive-img" src="{{isset($oldInputs['id_card_pic'])?url($oldInputs['id_card_pic']):url($artist->id_card)}}" />
-                                </div>
-                            </div>
-                            <div class="row">
-                                <button class="btn waves-effect waves-light" type="submit" >ثبت نام
+                                <button class="btn waves-effect waves-light" type="submit" >ثبت رویداد
                                 </button>
                             </div>
                         </div>
@@ -173,13 +121,6 @@
 function updateChips(){
     var tags = $('.art-fields-autocomplete').material_chip('data');
     $('#art-fields').val(JSON.stringify(tags.map(art_field_chip_to_text)));
-
-    console.log(tags);
-    
-    var tags = $('.educations-autocomplete').material_chip('data');
-    $('#educations').val(JSON.stringify(tags.map(educations_chip_to_text)));
-
-    console.log(tags);
 }
 $('.chips').on('chip.add', function(e, chip){
     updateChips();
@@ -225,36 +166,19 @@ $(document).ready(function(){
             minLength: 1
         },
         data: [
-            @foreach($art_fields as $art_field)
-                {
-                    tag: '{{$art_field->art_field_title}}'
-                },
-            @endforeach
-        ],
-    });
-
-    $('.educations-autocomplete').material_chip({
-        placeholder: '+ مدرک تحصیلی',
-        secondaryPlaceholder: 'تحصیلات',
-        autocompleteOptions: {
-        data: {
-            "دیپلم - ریاضی فیزیک": null,
-            "دیپلم - هنر": null,
-            "فوق دیپلم - نوازندگی": null,
-            "لیسانس - موسیقی": null,
-            "لیسانس - سینما": null,
-            "لیسانس - تئاتر": null,
-            "لیسانس - عکاسی": null,
-        },
-        limit: 5,
-        minLength: 1
-        },
-        data: [
-            @foreach($educations as $education)
-                {
-                    tag: '{{$education->education_title}}'
-                },
-            @endforeach
+            @if(isset($oldInputs['art-fields']))
+                @foreach($oldInputs['art-fields'] as $art_field)
+                    {
+                        tag: '{{$art_field->title}}'
+                    },
+                @endforeach
+            @else
+                @foreach($art_fields as $art_field)
+                    {
+                        tag: '{{$art_field->art_field_title}}'
+                    },
+                @endforeach
+            @endif
         ],
     });
     updateChips();
