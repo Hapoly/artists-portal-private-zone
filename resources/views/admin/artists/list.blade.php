@@ -69,15 +69,15 @@
                                 </td>
                                 <td>
                                     <a href="{{url('admin/artist/show/' . $artist->id)}}" class="waves-effect waves-light btn right" target="_blank">جزئیات</a>
-                                    <a href="{{url('admin/artist/remove/' . $artist->id)}}" class="waves-effect waves-light btn right">حذف</a>
+                                    <a href="{{url('admin/artist-remove/' . $artist->id)}}" class="waves-effect waves-light btn-flat right">حذف</a>
                                     @if($artist->status == 1)
-                                        <a href="{{url('artist/accept/' . $artist->id)}}" class="waves-effect waves-light btn right">تائید</a>
+                                        <a href="{{url('admin/artist-accept/' . $artist->id)}}" class="waves-effect waves-light btn-flat right">تائید</a>
                                     @elseif($artist->status == 2)
-                                        <a href="{{url('artist/remove/' . $artist->id)}}" class="waves-effect waves-light btn right">محروم</a>
+                                        <a href="{{url('admin/artist-ban/' . $artist->id)}}" class="waves-effect waves-light btn-flat right">محروم</a>
                                     @elseif($artist->status == 3)
-                                        <a href="{{url('artist/remove/' . $artist->id)}}" class="waves-effect waves-light btn right">فعال</a>
+                                        <a href="{{url('admin/artist-active/' . $artist->id)}}" class="waves-effect waves-light btn-flat right">فعال</a>
                                     @elseif($artist->status == 4)
-                                        <a href="{{url('artist/remove/' . $artist->id)}}" class="waves-effect waves-light btn right">بازگردانی</a>
+                                        <a href="{{url('admin/artist-recylce/' . $artist->id)}}" class="waves-effect waves-light btn-flat right">بازگردانی</a>
                                     @endif
                                 </td>
                             </tr>
@@ -89,9 +89,11 @@
                     <li class="active"><a href="#!">{{$page.'/'.$pageCount}}</a></li>
                     <li class="{{$page==1?'disabled':'waves-effect'}}"><a href="{{url('admin/artists/' . ($page-1) . $sort)}}"><i class="material-icons">chevron_left</i></a></li>
                 </ul>
+
             @else
                 <span>هیچ هنرمندی ثبت نشده است</span>
             @endif
+            <a href="{{url('admin/artist-new/')}}" class="waves-effect waves-light btn right" target="_blank">هنرمند جدید</a>
         </div>
     </div>
 </div>

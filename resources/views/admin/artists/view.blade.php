@@ -73,6 +73,15 @@
                     >حذف
                 </a>
                 @if($artist->status == 1)
+                    <a href="{{url('admin/artist-accept/' . $artist->id)}}" class="waves-effect waves-light btn-flat">تائید</a>
+                @elseif($artist->status == 2)
+                    <a href="{{url('admin/artist-ban/' . $artist->id)}}" class="waves-effect waves-light btn-flat">محروم</a>
+                @elseif($artist->status == 3)
+                    <a href="{{url('admin/artist-active/' . $artist->id)}}" class="waves-effect waves-light btn-flat">فعال</a>
+                @elseif($artist->status == 4)
+                    <a href="{{url('admin/artist-recylce/' . $artist->id)}}" class="waves-effect waves-light btn-flat">بازگردانی</a>
+                @endif
+                @if($artist->status == 1)
                     <span class="left new badge amber lighten-1" data-badge-caption="در انتظار برای تایید"></span>
                 @elseif($artist->status == 2)
                     <span class="left new badge light-green" data-badge-caption="فعال"></span>

@@ -7,6 +7,7 @@ use App\Http\Controllers\Controller;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Validator;
 use Illuminate\Support\Facades\Auth;
+use App\User;
 
 class AdminArtistsController extends Controller
 {
@@ -74,7 +75,7 @@ class AdminArtistsController extends Controller
         ]);
     }
     public function editPost(Request $request, $id){
-        $validator = $this->myRegisterValidate($request);
+        $validator = $this->myArtistEditValidate($request);
         $artist = DB::table('users')
             ->join('artists', 'artists.id', '=', 'users.id')
             ->select(
@@ -209,85 +210,99 @@ class AdminArtistsController extends Controller
     }
 
     public function remove(Request $request, $id){
-        DB::table('employees')->where('id', '=', $id)->delete();   
+        DB::table('users')->where('id', '=', $id)->update(['status' => 4]);
         return back();
     }
 
-    public function newGet(Request $request, $unitId=0){
-        $group_code = Auth::user()->group_code;
-        $unitTitle = '';
-        if($unitId != 0)
-            $unitTitle = DB::table('units')->where('id', '=', $unitId)->first()->title;
-        
+    public function accept(Request $request, $id){
+        DB::table('users')->where('id', '=', $id)->update(['status' => 2]);
+        return back();
+    }
 
-        return view('admin.employees.new', [
-            'unit_title'                => $unitTitle,
-            'group_code'                => $group_code,
-            'genders'                   => DB::table('genders')                     ->get(),
-            'certificateTypes'          => DB::table('certificate_types')           ->get(),
-            'business_license_sources'  => DB::table('business_license_sources')    ->get(),
-            'habitates'                 => DB::table('cities')                      ->get(),
-            'degrees'                   => DB::table('degrees')                     ->get(),
-            'study_fields'              => DB::table('study_fields')                ->get(),
-            'job_fields'                => DB::table('job_fields')                  ->get(),
-            'marriges'                  => DB::table('merrige_types')               ->get(),
-            'months'                    => config('constants.months')
+    public function ban(Request $request, $id){
+        DB::table('users')->where('id', '=', $id)->update(['status' => 3]);
+        return back();
+    }
+
+    public function active(Request $request, $id){
+        DB::table('users')->where('id', '=', $id)->update(['status' => 2]);
+        return back();
+    }
+
+    public function recylce(Request $request, $id){
+        DB::table('users')->where('id', '=', $id)->update(['status' => 2]);
+        return back();
+    }
+
+    public function newGet(Request $request){
+        return view('admin.artists.new',[
+            'art_fields' => [],
+            'educations' => [],
             ]);
     }
 
     public function newPost(Request $request){
-        $validator = $this->myValidate($request);
-        $group_code = Auth::user()->group_code;
+        $validator = $this->myNewArtistValidate($request);
         if($validator->fails()){
+            $oldInputs = $request->all();
+            $oldInputs['educations'] = json_decode($oldInputs['educations']);
+            $oldInputs['art-fields'] = json_decode($oldInputs['art-fields']);
+            //die(json_encode($oldInputs));
 
-            return view('admin.employees.new', [
-                'group_code'                => $group_code,
-                'genders'                   => DB::table('genders')                     ->get(),
-                'certificateTypes'          => DB::table('certificate_types')           ->get(),
-                'habitates'                 => DB::table('cities')                      ->get(),
-                'degrees'                   => DB::table('degrees')                     ->get(),
-                'study_fields'              => DB::table('study_fields')                ->get(),
-                'job_fields'                => DB::table('job_fields')                  ->get(),
-                'business_license_sources'  => DB::table('business_license_sources')    ->get(),
-                'marriges'                  => DB::table('merrige_types')               ->get(),
-                'oldInputs'                 => $request->all(),
-                'months'                    => config('constants.months')
+            return view('admin.artists.new', [
+                'oldInputs'                 => $oldInputs,
+                'error_type'                => 'fail',
                 ])->withErrors($validator);
 
         }else{
-            $username = Auth::user()->name;
-            $unitId = DB::table('units')->where('title', '=', $request->input('unit_title'))->first()->id;
-            $fieldId = DB::table('study_fields')->where('title', '=', $request->input('field_title'))->first()->id;
 
-            $id = DB::table('employees')->insertGetId(
-                [
-                    'user'                  => $username,
-                    'unit_id'               => $unitId,
-                    'first_name'            => $request->input('first_name'),
-                    'last_name'             => $request->input('last_name'),
-                    'father_name'           => $request->input('father_name'),
-                    'id_number'             => $request->input('id_number'),
-                    'gender'                => $request->input('gender'),
-                    'birth_date'            => $request->input('birth_date_year') . '-' . $request->input('birth_date_month') . '-' . $request->input('birth_date_day'),
-                    'birth_place'           => $request->input('birth_place'),
-                    'habitate'              => $request->input('habitate'),
-                    'habitate_years'        => $request->input('habitate_years'),
-                    'degree'                => $request->input('degree'),
-                    'field'                 => $fieldId,
-                    'job'                   => $request->input('job'),
-                    'marrige'               => $request->input('marrige'),
-                    'dependents'            => $request->input('dependents'),
-                    'experience'            => $request->input('experience'),
-                    'address'               => $request->input('address'),
-                    'created_at'            => time()[0],
-                    'updated_at'            => time()[0]
-                ]
-            );
+            $id = User::create([
+                'first_name'        => $request->input('first_name'),
+                'last_name'         => $request->input('last_name'),
+                'email'             => $request->input('email'),
+                'password'          => bcrypt($request->input('password')),
+                'group_code'        => 1
+            ])->id;
+            DB::table('artists')->insert([
+                'id'                => $id,
+                'father_name'       => $request->input('father_name'),
+                'nickname'          => $request->input('nickname'),
+                'religion'          => $this->get_religion_title($request->input('religion')),
+                'habitate_years'    => $request->input('habitate_years'),
+                'habitate_place'    => $this->get_habitate_place_title($request->input('habitate_place')),
+                'phone'             => $request->input('phone'),
+                'cellphone'         => $request->input('cellphone'),
+                'address'           => $request->input('address'),
+                'birth_day'         => $request->input('birth_day'),
+                'birth_month'       => $request->input('birth_month'),
+                'birth_year'        => $request->input('birth_year'),
+                'birth_place'       => $request->input('birth_place'),
+                'profile'           => $request->file('profile_pic')->store('storage'),
+                'id_card'           => $request->file('id_card_pic')->store('storage'),
+            ]);
 
-            return redirect('admin/employee/' . $id);
+            $art_fields = json_decode($request->input('art-fields'));
+            $educations = json_decode($request->input('educations'));
+            foreach ($art_fields as $art_field) {
+                DB::table('art_fields')->insert([
+                    'artist_id'         => $id,
+                    'art_field_id'      => $art_field->id,
+                    'art_field_title'   => $art_field->title,
+                ]);
+            }
+
+            foreach ($educations as $education) {
+                DB::table('educations')->insert([
+                    'artist_id'         => $id,
+                    'education_id'      => $education->id,
+                    'education_title'   => $education->title,
+                ]);
+            }
+
+            return redirect()->intended('admin/artist/show/' . $id);
         }
     }
-    public function myRegisterValidate($request){
+    public function myArtistEditValidate($request){
         $messages = [
             'first_name.*'                  => 'لطفا نام را وارد کنید',
             'last_name.*'                   => 'لطفا نام خانوادگی کاربر را وارد کنید',
@@ -331,6 +346,58 @@ class AdminArtistsController extends Controller
 
         return $validator;
     }
+
+    public function myNewArtistValidate($request){
+        $messages = [
+            'first_name.*'                  => 'لطفا نام را وارد کنید',
+            'last_name.*'                   => 'لطفا نام خانوادگی کاربر را وارد کنید',
+            'email.*'                       => 'آدرس ایمیل نامعتبر',
+            'father_name.*'                 => 'لطفا نام پدر خود را وارد کنید',
+            'nickname.*'                    => 'نام هنری خود را وارد کنید',
+
+            'religion.*'                    => 'مذهب نامعتبر است',
+            'habitate_years.*'              => 'سال های سکونت نامعتبر است',
+            'habitate_place.*'              => 'محل سکونت نامعتبر است',
+            'phone.*'                       => 'شماره تماس همراه نامعتبر است',
+            'cellphone.*'                   => 'شماره تلفن ثابت نامعتبر است',
+
+            'address.*'                     => 'آدرس نامعتبر است',
+            'birth_day.*'                   => 'روز تولد نامعتبر است',
+            'birth_month.*'                 => 'ماه تولد نامعتبر است',
+            'birth_year.*'                  => 'سال تولد نامعتبر است',
+            'birth_place.*'                 => 'محل تولد را وارد کنید',
+            'profile_pic.*'                 => 'عکس پرسنلی خود را انتخاب کنید',
+            'id_card_pic.*'                 => 'اسکن کارت ملی خود را آپلود کنید',
+
+            'password.*'                    => 'لطفا کلمه عبور را وارد کنید(حداقل ۴ حرف)',
+            'password_conf.*'               => 'کلمات عبور یکسان نیستند',
+        ];
+
+        $rules = [
+            'first_name'                  => 'required',
+            'last_name'                   => 'required',
+            'email'                       => 'required|email',
+            'father_name'                 => 'required',
+            'nickname'                    => 'required',
+
+            'religion'                    => 'required',
+            'habitate_years'              => 'required',
+            'habitate_place'              => 'required',
+            'phone'                       => 'required',
+            'cellphone'                   => 'required',
+
+            'address'                     => 'required',
+            'birth_day'                   => 'required|numeric',
+            'birth_month'                 => 'required|numeric',
+            'birth_year'                  => 'required|numeric',
+            'birth_place'                 => 'required',
+            'password'                    => 'required|string|min:4',
+        ];
+        $validator = Validator::make($request->all(), $rules, $messages);
+
+        return $validator;
+    }
+
     function generatePages($total, $current){
         if($total > 1){
             $total=intval($total);

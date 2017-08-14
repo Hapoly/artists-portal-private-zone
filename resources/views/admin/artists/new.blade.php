@@ -1,274 +1,290 @@
 @extends('layouts.app')
 
 @section('title')
-داشبورد
-@endsection
-
-
-@section('back')
-<li>
-    <a href="{{url('admin/employees')}}">
-        <i class="material-icons">keyboard_return</i>
-    </a>
-</li>
+هنرمند جدید
 @endsection
 
 @section('content')
-@if (count($errors) > 0)
-    <div class="alert alert-danger rtl">
-        <ul>
-        @foreach ($errors->all() as $error)
-                <li>{{ $error }}</li>
-        @endforeach
-        </ul>
-    </div>
-@endif
-<div class="row">
-    <div class="col-lg-12 col-md-12">
-        <div class="card">
-            <div class="card-header rtl" data-background-color="purple">
-                <h4 class="title">شاغل جدید</h4>
+<div class="top-buffer row">
+    @if (isset($error_type))
+        @if (count($errors) > 0 && $error_type == 'fail')
+        <div class="row">
+            <div class="col s12 m6 offset-m3 top-buffer">
+                <div class="card-panel  red darken-1 white-text">
+                    <ul>
+                        @foreach ($errors->all() as $error)
+                                <li>{{ $error }}</li>
+                        @endforeach
+                    </ul>
+                </div>
             </div>
-            <div class="card-content">
-                <form action="{{url('admin/employee-new')}}" method="post">
+        </div>
+        @endif
+        @if($error_type == 'done')
+        <div class="row">
+            <div class="col s12 m6 offset-m3 top-buffer">
+                <div class="card-panel green darken-3 white-text">
+                    <p>ویرایش با موفقیت انجام شد</p>
+                </div>
+            </div>
+        </div>
+        @endif
+    @endif
+    <div class="row">
+        <div class="col s12 m6 offset-m3">
+            <div class="card-panel white">
+                <div class="row">
+                    <form action="{{url('admin/artist-new')}}" method="post" enctype="multipart/form-data">
                     {{ csrf_field() }}
                     <div class="row">
-                        <div class="col-md-4 col-sm-4 pull-right">
-                            <div class="form-group label-floating rtl col-lg-12 col-md-12">
-                                <label class="control-label">نام</label>
-                                <input type="text" name="first_name" value="{{isset($oldInputs)? $oldInputs['first_name']: ''}}" class="form-control">
-                            </div>
-                        </div>
-                        <div class="col-md-4 col-sm-4 pull-right">
-                            <div class="form-group label-floating rtl col-lg-12 col-md-12">
-                                <label class="control-label">نام خانوادگی</label>
-                                <input type="text" name="last_name" value="{{isset($oldInputs)? $oldInputs['last_name']: ''}}" class="form-control">
-                            </div>
-                        </div>
-                        <div class="col-md-4 col-lg-4 col-sm-12 pull-right">
-                            <div class="col-md-8 col-sm-8">
-                                <div class="form-group rtl col-lg-12 col-md-12">
-                                    <div class="form-group" style="margin-top: 0px">
-                                        <select class="form-control" name="gender" style="padding-top: 0px">
-                                            @foreach ($genders->all() as $gender)
-                                                    <option value="{{$gender->id}}" {{isset($oldInputs)?($gender->id==$oldInputs['gender']?'selected':''):''}}>{{$gender->title}}</option>
-                                            @endforeach
-                                        </select>
-                                    </div>
+                        <div class="col s12">
+                            <div class="row"> 
+                                <div class="input-field col m6 s12 right">
+                                    <input  id="reg_firstname" name="first_name" type="text" class="validate"
+                                    value="{{isset($oldInputs)?$oldInputs['first_name']:''}}"/>
+                                    <label for="reg_firstname">* نام</label>
+                                </div>
+                                <div class="input-field col m6 s12 right">
+                                    <input id="reg_lastname" name="last_name" type="text" class="validate"
+                                    value="{{isset($oldInputs)?$oldInputs['last_name']:''}}"/>
+                                    <label for="reg_lastname">* نام خانوادگی</label>
                                 </div>
                             </div>
-                            <div class="col-md-4 col-sm-4 text-center" style="margin-top: 30px;">
-                                <span>جنسیت</span>
-                            </div>
-                        </div>
-                    </div>
-                    <div class="row">
-                        <div class="col-md-3 col-sm-4 pull-right">
-                            <div class="form-group label-floating rtl col-lg-12 col-md-12">
-                                <label class="control-label">کد ملی</label>
-                                <input type="text" name="id_number" value="{{isset($oldInputs)? $oldInputs['id_number']: ''}}" class="form-control">
-                            </div>
-                        </div>
-                        <div class="col-md-3 col-sm-4 pull-right">
-                            <div class="form-group label-floating rtl col-lg-12 col-md-12">
-                                <label class="control-label">نام پدر</label>
-                                <input type="text" name="father_name" value="{{isset($oldInputs)? $oldInputs['father_name']: ''}}" class="form-control">
-                            </div>
-                        </div>
-                        <div class="col-md-6 col-sm-12 pull-right">
-                                <div class="col-md-3 col-sm-3">
-                                    <select class="form-control" name="birth_date_day" style="padding-top: 0px">
-                                        @for ($i=1; $i<=30; $i++)
-                                            <option value="{{$i}}" {{isset($oldInputs['birth_date_day'])? ($i == $oldInputs['birth_date_day'] ? 'selected': '' ): ''}}>{{$i}}</option>
-                                        @endfor
-                                    </select>
-                                </div>
-                                <div class="col-md-3 col-sm-3">
-                                    <select class="form-control" name="birth_date_month" style="padding-top: 0px">
-                                        @foreach($months as $key => $val)
-                                            <option value="{{$key}}" {{isset($oldInputs['birth_date_month'])? ($key == $oldInputs['birth_date_month'] ? 'selected': '' ): ''}} >{{$val}}</option>    
-                                        @endforeach
-                                    </select>
-                                </div>
-                                <div class="col-md-3 col-sm-3">
-                                    <select class="form-control" name="birth_date_year" style="padding-top: 0px">
-                                        @for ($i=1300; $i<1388; $i++)
-                                            <option value="{{$i}}" {{isset($oldInputs['birth_date_year'])? ($i == $oldInputs['birth_date_year'] ? 'selected': '' ): ''}}>{{$i}}</option>
-                                        @endfor
-                                    </select>
-                                </div>
-                                <div class="col-md-3 col-sm-3 text-center" style="margin-top: 30px;">
-                                    <span>تاریخ تولد</span>
-                                </div>
-                            </div>
-                    </div>
 
-                    <div class="row">
-                        <div class="col-md-4 col-sm-6 pull-right">
-                            <div class="form-group label-floating rtl col-lg-12 col-md-12">
-                                <label class="control-label">محل تولد</label>
-                                <input type="text" value="{{isset($oldInputs)? $oldInputs['birth_place']: ''}}" name="birth_place" class="form-control">
+                            <div class="row"> 
+                                <div class="input-field col s12 m12">
+                                    <input  id="reg_email" name="email" type="email" class="validate"
+                                    value="{{isset($oldInputs)?$oldInputs['email']:''}}"/>
+                                    <label for="reg_email">* آدرس ایمیل</label>
+                                </div> 
                             </div>
-                        </div>
-                        <div class="col-md-4 col-sm-6">
-                            <div class="col-md-8 col-sm-8">
-                                <div class="form-group rtl col-lg-12 col-md-12">
-                                    <div class="form-group" style="margin-top: 0px">
-                                        <select class="form-control" name="habitate" style="padding-top: 0px">
-                                            @foreach ($habitates->all() as $habitate)
-                                                <option value="{{$habitate->id}}" {{isset($oldInputs)?($habitate->id==$oldInputs['habitate']?'selected':''):''}}>{{$habitate->title}}</option>
-                                            @endforeach
-                                        </select>
-                                    </div>
+
+                            <div class="row"> 
+                                <div class="input-field col m6 s12 right">
+                                    <input  id="reg_password" name="password" type="password" class="validate"/>
+                                    <label for="reg_password">* کلمه عبور</label>
+                                </div> 
+                                <div class="input-field col m6 s12 right">
+                                    <input id="reg_rep_password" name="password_conf" type="password" class="validate"/>
+                                    <label for="reg_rep_password">* تکرار کلمه عبور</label>
                                 </div>
                             </div>
-                            <div class="col-md-4 col-sm-4 text-center" style="margin-top: 30px;">
-                                <span>محل سکونت</span>
-                            </div>
-                        </div>
-                        <div class="col-md-4 col-sm-8 pull-right">
-                            <div class="form-group label-floating rtl col-lg-12 col-md-12">
-                                <label class="control-label">سال های سکونت</label>
-                                <input type="text" value="{{isset($oldInputs)? $oldInputs['habitate_years']: ''}}" name = "habitate_years" class="form-control">
-                            </div>
-                        </div>
-                    </div>
-                    <div class="row">
-                        <div class="col-md-12 col-sm-12 pull-right">
-                            <div class="form-group label-floating rtl col-lg-12 col-md-12">
-                                <label class="control-label">آدرس دقیق محل سکونت</label>
-                                <input type="text" name="address" value="{{isset($oldInputs)? $oldInputs['address']: ''}}" class="form-control">
-                            </div>
-                        </div>
-                    </div>
-                    <div class="row">
-                        <div class="col-md-6 col-sm-12">
-                            <div class="col-md-8 col-sm-8">
-                                <div class="form-group rtl col-lg-12 col-md-12">
-                                    <div class="form-group" style="margin-top: 0px">
-                                        <select class="form-control" name="degree" style="padding-top: 0px">
-                                            @foreach ($degrees->all() as $degree)
-                                                <option value="{{$degree->id}}" {{isset($oldInputs)?($degree->id==$oldInputs['degree']?'selected':''):''}}>{{$degree->title}}</option>
-                                            @endforeach
-                                        </select>
-                                    </div>
+
+                            <div class="row"> 
+                                <div class="input-field col m6 s12 right">
+                                    <input  id="reg_fathername" name="father_name" type="text" class="validate"
+                                    value="{{isset($oldInputs)?$oldInputs['father_name']:''}}"/>
+                                    <label for="reg_fathername">* نام پدر</label>
+                                </div>
+                                <div class="input-field col m6 s12 right">
+                                    <input id="reg_artname" name="nickname" type="text" class="validate"
+                                    value="{{isset($oldInputs)?$oldInputs['nickname']:''}}"/>
+                                    <label for="reg_artname">* نام هنری</label>
                                 </div>
                             </div>
-                            <div class="col-md-4 col-sm-4 text-center" style="margin-top: 30px;">
-                                <span>مدرک تحصیلی</span>
-                            </div>
-                        </div>
-                        <div class="col-md-6- col-sm-6">
-                            <div class="col-md-10 col-sm-10">
-                                <div class="form-group label-floating rtl col-lg-12 col-md-12">
-                                    <input type="text" id="field" name="field_title" value="{{isset($oldInputs)? $oldInputs['field_title']: ''}}" class="form-control">
-                                </div
->                            </div>
-                            <div class="col-md-2 col-sm-2 text-center" style="margin-top: 30px;">
-                                <span>رشته تحصیلی</span>
-                            </div>
-                            <script type="text/javascript">
-                                $( function() {
-                                    var url = "{{url('api/study_fields')}}";
-                                    $.get(url, function(data, status){
-                                        var jsonRes = JSON.parse(data);
-                                        console.log(jsonRes);
-                                        $("#field").autocomplete({
-                                            source: jsonRes,
-                                            change: function (event, ui) {
-                                                if(!ui.item){
-                                                    $("#field").val("");
-                                                }
-                                            }
-                                        });
-                                    });
-                                });
-                            </script>
-                        </div>
-                    </div>
-                    <div class="row">
-                        <div class="col-md-4 col-sm-6">
-                            <div class="form-group label-floating rtl col-lg-12 col-md-12">
-                                <label class="control-label">تعداد افراد تحت تکفل</label>
-                                <input type="text" name="dependents" value="{{isset($oldInputs)? $oldInputs['dependents']: ''}}" class="form-control">
-                            </div>
-                        </div>
-                        <div class="col-md-4 col-sm-6">
-                            <div class="col-md-8 col-sm-8">
-                                <div class="form-group rtl col-lg-12 col-md-12">
-                                    <div class="form-group" style="margin-top: 0px">
-                                        <select class="form-control" name="marrige" style="padding-top: 0px">
-                                            @foreach ($marriges->all() as $marrige)
-                                                <option value="{{$marrige->id}}" {{isset($oldInputs)?($marrige->id==$oldInputs['marrige']?'selected':''):''}}>{{$marrige->title}}</option>
-                                            @endforeach
-                                        </select>
-                                    </div>
+                                <div class="row">
+                                    <div class="chips chips-autocomplete art-fields-autocomplete"></div>
+                                    <input hidden id="art-fields" name="art-fields" value="[]"></input>
+                                </div>
+                            <div class="row">
+                                <div class="input-field col s12">
+                                    <input type="text" id="religion" name="religion" class="autocomplete religion-autocomplete"
+                                    value="{{isset($oldInputs)?$oldInputs['religion']:''}}"/>
+                                    <label for="autocomplete-input">* مذهب</label>
                                 </div>
                             </div>
-                            <div class="col-md-4 col-sm-4 text-center" style="margin-top: 30px;">
-                                <span>تاهل</span>
-                            </div>
-                        </div>
-                        <div class="col-md-4 col-sm-6 pull-right">
-                            <div class="form-group label-floating rtl col-lg-12 col-md-12">
-                                <label class="control-label">مدت سابقه کار(ماه)</label>
-                                <input type="text" name="experience" value="{{isset($oldInputs)? $oldInputs['experience']: ''}}" class="form-control">
-                            </div>
-                        </div>
-                    </div>
-                    <div class="row">
-                        <div class="col-md-6 col-sm-12">
-                            <div class="col-md-8 col-sm-8">
-                                <div class="form-group rtl col-lg-12 col-md-12">
-                                    <div class="form-group" style="margin-top: 0px">
-                                        <select class="form-control" name="job" style="padding-top: 0px">
-                                            @foreach ($job_fields->all() as $job)
-                                                <option value="{{$job->id}}" {{isset($oldInputs)?($job->id==$oldInputs['job']?'selected':''):''}}>{{$job->title}}</option>
-                                            @endforeach
-                                        </select>
-                                    </div>
+                            <div class="row">
+                                <div class="input-field col m6 s12 right">
+                                    <input id="habitate_years" name="habitate_years" type="number" class="validate"
+                                    value="{{isset($oldInputs)?$oldInputs['habitate_years']:''}}"/>
+                                    <label for="habitate_years">* سال های سکونت</label>
+                                </div>
+                                <div class="input-field col m6 s12 right">
+                                    <input type="text" id="habitate_place" name="habitate_place" class="autocomplete habitate-autocomplete"
+                                    value="{{isset($oldInputs)?$oldInputs['habitate_place']:''}}"/>
+                                    <label for="habitate_place">* محل سکونت</label>
                                 </div>
                             </div>
-                            <div class="col-md-4 col-sm-4 text-center" style="margin-top: 30px;">
-                                <span>عنوان شغلی</span>
+                            <div class="row"> 
+                                <div class="input-field col m6 s12 right">
+                                    <input  id="phone" type="text" name="phone" class="validate"
+                                    value="{{isset($oldInputs)?$oldInputs['phone']:''}}"/>
+                                    <label for="phone">* شماره تماس ثابت</label>
+                                </div>
+                                <div class="input-field col m6 s12 right">
+                                    <input id="cellphone" type="text" name="cellphone" class="validate"
+                                    value="{{isset($oldInputs)?$oldInputs['cellphone']:''}}"/>
+                                    <label for="cellphone">* شماره همراه</label>
+                                </div>
+                            </div>
+                            <div class="row"> 
+                                <div class="input-field col m12 s12 right">
+                                    <input id="address" type="text" name="address" class="validate"
+                                    value="{{isset($oldInputs)?$oldInputs['address']:''}}"/>
+                                    <label for="address">* آدرس</label>
+                                </div>
+                            </div>
+                            <div class="row">
+                                <div class="chips chips-autocomplete educations-autocomplete"></div>
+                                <input hidden id="educations" name="educations" value="[]"></input>
+                            </div>
+                            <div class="row"> 
+                                <div class="input-field col m3 s6 right">
+                                    <input  id="birth_day" type="number" name="birth_day" min="1" class="validate"
+                                    value="{{isset($oldInputs)?$oldInputs['birth_day']:''}}"/>
+                                    <label for="birth_day">* روز تولد</label>
+                                </div>
+                                <div class="input-field col m3 s6 right">
+                                    <input id="birth_month" type="number" name="birth_month" min="1" max="12" class="validate"
+                                    value="{{isset($oldInputs)?$oldInputs['birth_month']:''}}"/>
+                                    <label for="birth_month">* ماه تولد</label>
+                                </div>
+                                <div class="input-field col m3 s6 right">
+                                    <input id="birth_year" type="number" name="birth_year" min="1300" class="validate"
+                                    value="{{isset($oldInputs)?$oldInputs['birth_year']:''}}"/>
+                                    <label for="birth_year">* سال تولد</label>
+                                </div>
+                                <div class="input-field col m3 s6 right">
+                                    <input id="birth_place" type="text" name="birth_place" class="validate"
+                                    value="{{isset($oldInputs)?$oldInputs['birth_place']:''}}"/>
+                                    <label for="birth_place">* محل تولد</label>
+                                </div>
+                            </div>
+                            <div class="file-field input-field row">
+                                <div class="btn">
+                                    <span>عکس پرسنلی</span>
+                                    <input id="profile_pic" name="profile_pic" type="file"/>
+                                </div>
+                                <div class="file-path-wrapper">
+                                    <input class="file-path validate" type="text"/>
+                                </div>
+                            </div>
+                            <div class="file-field input-field row">
+                                <div class="btn">
+                                    <span>اسکن کارت ملی</span>
+                                    <input id="id_card_pic" name="id_card_pic" type="file"/>
+                                </div>
+                                <div class="file-path-wrapper">
+                                    <input class="file-path validate" type="text"/>
+                                </div>
+                            </div>
+                            <div class="row">
+                                <button class="btn waves-effect waves-light" type="submit" >ثبت هنرمند
+                                </button>
                             </div>
                         </div>
-                        <div class="col-md-6- col-sm-6">
-                            <div class="col-md-10 col-sm-10">
-                                <div class="form-group label-floating rtl col-lg-12 col-md-12">
-                                    <input type="text" id="unit" name="unit_title" value="{{isset($oldInputs)? $oldInputs['unit_title']: ''}}" class="form-control">
-                                </div
->                            </div>
-                            <div class="col-md-2 col-sm-2 text-center" style="margin-top: 30px;">
-                                <span>کارگاه</span>
-                            </div>
-                            <script type="text/javascript">
-                                $( function() {
-                                    var url = "{{url('api/units')}}";
-                                    $.get(url, function(data, status){
-                                        var jsonRes = JSON.parse(data);
-                                        console.log(jsonRes);
-                                        $("#unit").autocomplete({
-                                            source: jsonRes,
-                                            change: function (event, ui) {
-                                                if(!ui.item){
-                                                    $("#unit").val("");
-                                                }
-                                            }
-                                        });
-                                    });
-                                });
-                            </script>
-                        </div>
                     </div>
-                    <div class="row">
-                        <div class="col-md-12">
-                            <button type="submit" class="btn btn-primary pull-right">ثبت شاغل</button>
-                        </div>
-                    </div>
-                </form>
+                    </form>
+                </div>
             </div>
         </div>
     </div>
 </div>
+<script>
+function updateChips(){
+    var tags = $('.art-fields-autocomplete').material_chip('data');
+    $('#art-fields').val(JSON.stringify(tags.map(art_field_chip_to_text)));
+
+    console.log(tags);
+    
+    var tags = $('.educations-autocomplete').material_chip('data');
+    $('#educations').val(JSON.stringify(tags.map(educations_chip_to_text)));
+
+    console.log(tags);
+}
+$('.chips').on('chip.add', function(e, chip){
+    updateChips();
+});
+
+$('.chips').on('chip.delete', function(e, chip){
+    updateChips();
+});
+
+$('.chips').on('chip.select', function(e, chip){
+    updateChips();
+});
+
+$(document).ready(function(){
+    $('.art-fields-autocomplete').material_chip({
+        placeholder: '+ حرفه های بیشتر',
+        secondaryPlaceholder: 'حرفه های هنری',
+        autocompleteOptions: {
+            data: {
+                'خوانندگی': null,
+                'نوازندگی': null,
+                'تئاتر': null,
+                'سینما': null,
+                'فیلم نامه نویسی': null,
+                'گیتار': null,
+                'منبت کاری': null,
+                'مجسمه سازی': null,
+                'نقاشی آبرنگ': null,
+                'نقاشی مداد شمعی': null,
+                'نقاشی': null,
+                'میکس': null,
+                'پیانو': null,
+                'بازیگری': null,
+                'صدابرداری': null,
+                'دی جی': null,
+                'عکاسی': null,
+                'فیلم برداری': null,
+                'موسیقی سنتی': null,
+                'تمبک': null,
+                'پانتومیم': null,
+            },
+            limit: 5,
+            minLength: 1
+        },
+        data: [
+            @if(isset($oldInputs))
+                @foreach($oldInputs['art-fields'] as $art_field)
+                    {
+                        tag: '{{$art_field->title}}'
+                    },
+                @endforeach
+            @else
+                @foreach($art_fields as $art_field)
+                    {
+                        tag: '{{$art_field->art_field_title}}'
+                    },
+                @endforeach
+            @endif
+        ],
+    });
+
+    $('.educations-autocomplete').material_chip({
+        placeholder: '+ مدرک تحصیلی',
+        secondaryPlaceholder: 'تحصیلات',
+        autocompleteOptions: {
+        data: {
+            "دیپلم - ریاضی فیزیک": null,
+            "دیپلم - هنر": null,
+            "فوق دیپلم - نوازندگی": null,
+            "لیسانس - موسیقی": null,
+            "لیسانس - سینما": null,
+            "لیسانس - تئاتر": null,
+            "لیسانس - عکاسی": null,
+        },
+        limit: 5,
+        minLength: 1
+        },
+        data: [
+            @if(isset($oldInputs))
+                @foreach($oldInputs['educations'] as $education)
+                    {
+                        tag: '{{$education->title}}'
+                    },
+                @endforeach
+            @else
+                @foreach($educations as $education)
+                    {
+                        tag: '{{$education->education_title}}'
+                    },
+                @endforeach
+            @endif
+        ],
+    });
+    updateChips();
+});
+</script>
 @endsection

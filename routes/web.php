@@ -51,13 +51,17 @@ Route::group(['namespace' => 'Admin', 'prefix' => 'admin', 'middleware' => ['aut
     Route::get ('/artist/edit/{ArtistId}', 'AdminArtistsController@editGet')->where('ArtistId', '[0-9]+');
     Route::post('/artist/edit/{ArtistId}', 'AdminArtistsController@editPost')->where('ArtistId', '[0-9]+');
     /* new artist page */
-    Route::get('/artist-new/{unitId?}', 'AdminArtistsController@newGet');
+    Route::get ('/artist-new', 'AdminArtistsController@newGet' );
     Route::post('/artist-new', 'AdminArtistsController@newPost');
     /* print routes */
     Route::get('/artist-list-print/', 'AdminArtistsController@listPrint');
     Route::get('/artist-single-print/{id}', 'AdminArtistsController@singlePrint');
     /* Artist remove */
-    Route::get('/Artist-remove/{ArtistId}', 'AdminArtistsController@remove');
+    Route::get('/artist-remove/{ArtistId}', 'AdminArtistsController@remove');
+    Route::get('/artist-accept/{ArtistId}', 'AdminArtistsController@accept');
+    Route::get('/artist-ban/{ArtistId}', 'AdminArtistsController@ban');
+    Route::get('/artist-active/{ArtistId}', 'AdminArtistsController@active');
+    Route::get('/artist-recylce/{ArtistId}', 'AdminArtistsController@recylce');
 
     /* backup routes */
     Route::get ('/backup', 'Backup@get');
