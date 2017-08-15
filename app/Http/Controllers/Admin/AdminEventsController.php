@@ -57,6 +57,7 @@ class AdminEventsController extends Controller
         $images = DB::table('event_images')->where('event_id', $id)->get();
         $fields = DB::table('event_fields')->where('event_id', $id)->get();
 
+        $event->place = $this->get_habitate_place_code($event->place);
         return view('admin.events.view', [
             'event'        => $event,
             'images'    => $images,
@@ -97,6 +98,8 @@ class AdminEventsController extends Controller
                         'end'           => $request->input('end_day') . '-' .
                                            $request->input('end_month') . '-' .
                                            $request->input('end_year'),
+                        'place'         => $this->get_habitate_place_title($request->input('habitate_place')),
+                        'phone'         => $request->input('phone'),
                     ]);
 
             $art_fields = json_decode($request->input('art-fields'));
@@ -218,8 +221,9 @@ class AdminEventsController extends Controller
                     'end'           => $request->input('end_day') . '-' .
                                        $request->input('end_month') . '-' .
                                        $request->input('end_year'),
-                    'status'        => 2
-
+                    'status'        => 2,
+                    'place'         => $this->get_habitate_place_title($request->input('place')),
+                    'phone'         => $request->input('phone'),
                 ]);
             
             $art_fields = json_decode($request->input('art-fields'));

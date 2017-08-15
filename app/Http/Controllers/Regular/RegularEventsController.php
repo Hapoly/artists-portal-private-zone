@@ -66,12 +66,14 @@ class RegularEventsController extends Controller
         $images = DB::table('event_images')->where('event_id', $id)->get();
         $fields = DB::table('event_fields')->where('event_id', $id)->get();
 
+        $event->place = $this->get_habitate_place_code($event->place);
         return view('regular.events.view', [
             'event'        => $event,
             'images'    => $images,
             'fields'    => $fields,
         ]);
     }
+
     public function editPost(Request $request, $id){
         $validator = $this->myEventEditValidate($request);
         $event = DB::table('events')
@@ -106,6 +108,8 @@ class RegularEventsController extends Controller
                         'end'           => $request->input('end_day') . '-' .
                                            $request->input('end_month') . '-' .
                                            $request->input('end_year'),
+                        'place'         => $this->get_habitate_place_title($request->input('habitate_place')),
+                        'phone'         => $request->input('phone'),
                     ]);
 
             $art_fields = json_decode($request->input('art-fields'));
@@ -143,6 +147,7 @@ class RegularEventsController extends Controller
                 ]);
         }
     }
+
     public function editGet(Request $request, $id){
         $event = DB::table('events')
             ->where('events.id', '=', $id)
@@ -223,8 +228,9 @@ class RegularEventsController extends Controller
                     'end'           => $request->input('end_day') . '-' .
                                        $request->input('end_month') . '-' .
                                        $request->input('end_year'),
-                    'status'        => 1
-
+                    'status'        => 1,
+                    'place'         => $this->get_habitate_place_title($request->input('place')),
+                    'phone'         => $request->input('phone'),
                 ]);
             
             $art_fields = json_decode($request->input('art-fields'));
@@ -252,6 +258,7 @@ class RegularEventsController extends Controller
             return redirect()->intended('user/event/show/' . $id);
         }
     }
+
     public function myEventEditValidate($request){
         $messages = [
             'title.*'                     => 'لطفا عنوان را انتخاب کنید',

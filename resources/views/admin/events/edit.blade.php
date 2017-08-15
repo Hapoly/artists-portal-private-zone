@@ -46,14 +46,22 @@
                                 </div>
                             </div>
                             <div class="row">
-                                <form class="col s12">
-                                    <div class="row">
-                                        <div class="input-field col s12">
-                                            <textarea id="description" name="description" class="materialize-textarea">{{isset($oldInputs)?$oldInputs['description']:''}}</textarea>
-                                            <label for="description">توضیحات</label>
-                                        </div>
-                                    </div>
-                                </form>
+                                <div class="input-field col s12">
+                                    <textarea id="description" name="description" class="materialize-textarea">{{isset($oldInputs)?$oldInputs['description']:''}}</textarea>
+                                    <label for="description">توضیحات</label>
+                                </div>
+                            </div>
+                            <div class="row">
+                                <div class="input-field col m6 s12 right">
+                                    <input  id="phone" name="phone" type="text" class="validate"
+                                    value="{{isset($oldInputs)?$oldInputs['phone']:''}}"/>
+                                    <label for="phone">* شماره تماس</label>
+                                </div>
+                                <div class="input-field col m6 s12 right">
+                                    <input type="text" id="place" name="place" class="autocomplete habitate-autocomplete"
+                                    value="{{isset($oldInputs)?$oldInputs['place']:''}}"/>
+                                    <label for="place">* شهر برگزاری</label>
+                                </div>
                             </div>
                             <div class="row">
                                 <div class="chips chips-autocomplete art-fields-autocomplete"></div>

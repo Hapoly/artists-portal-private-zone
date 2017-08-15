@@ -19,6 +19,14 @@
                 </div>
             </div>
             <div class="row">
+                <div class="col m6 s12 input">
+                    برگزاری در{{$event->place}}
+                </div>
+                <div class="col m6 s12 input">
+                    شماره تماس{{$event->phone}}
+                </div>
+            </div>
+            <div class="row">
                 <div class="col m12 s12 input">
                     @foreach($fields as $art_field)
                         <div class="chip">
