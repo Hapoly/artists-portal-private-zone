@@ -46,12 +46,3 @@ body{
 	-webkit-font-feature-settings: 'liga';
 	-webkit-font-smoothing: antialiased;
 }
-
-@font-face {
-     font-family: '0 Roya';
-     src: local('☺'),
-     local('0 Roya'),
-     url('http://awebfont.ir/services/fonts/611bba0f218e4740e1ce2e37ebc80ef3c29513101011931.woff') format('woff');
-font-weight: normal;
-font-style: normal;
-}

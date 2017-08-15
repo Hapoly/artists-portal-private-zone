@@ -37,7 +37,7 @@ Route::group(['namespace' => 'Admin', 'prefix' => 'admin', 'middleware' => ['aut
 
     /* events list */
     Route::get('/events/{page?}', 'AdminEventsController@list');
-    /* single artists page for editing or viewing */
+    
     Route::get ('/event/show/{eventId}', 'AdminEventsController@view')->where('eventId', '[0-9]+');
     
     Route::get ('/event/edit/{eventId}', 'AdminEventsController@editGet')->where('eventId', '[0-9]+');
@@ -52,7 +52,16 @@ Route::group(['namespace' => 'Admin', 'prefix' => 'admin', 'middleware' => ['aut
     Route::get('/event-active/{eventId}', 'AdminEventsController@active');
     Route::get('/event-recylce/{eventId}', 'AdminEventsController@recylce');
 
+    /* messages list */
+    Route::get('/messages/{page?}', 'AdminMessagesController@list');
     
+    Route::get ('/message/show/{messageId}', 'AdminMessagesController@view')->where('messageId', '[0-9]+');
+    /* new message page */
+    Route::get ('/message-new/{recieverId?}', 'AdminMessagesController@newGet' );
+    Route::post('/message-new', 'AdminMessagesController@newPost');
+    /* message remove */
+    Route::get('/message-remove/{messageId}', 'AdminMessagesController@remove');
+    Route::get('/message-reply/{messageId}', 'AdminMessagesController@reply');
 });
 
 /* ====================  regular panels  =============================*/

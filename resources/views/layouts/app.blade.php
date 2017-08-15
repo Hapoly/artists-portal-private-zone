@@ -14,9 +14,16 @@
     <script type="text/javascript" src="{{url('js/materialize.min.js')}}"></script>
     <script type="text/javascript" src="{{url('js/functions.js')}}"></script>
     <title>@yield('title') - هنرمندان</title>
-    <style>
+    <style type="text/css">
+        @font-face {
+          font-family: 'BRoya';
+          src: url('{{url('fonts/BRoya.eot?#')}}') format('eot'),  /* IE6–8 */
+               url('{{url('fonts/BRoya.woff')}}') format('woff'),  /* FF3.6+, IE9, Chrome6+, Saf5.1+*/
+               url('{{url('fonts/BRoya.ttf')}}') format('truetype');  /* Saf3—5, Chrome4+, FF3.5, Opera 10+ */
+        }
         body {
-            font-family: '0 Roya', tahoma, Arial;
+            font-family: BRoya, Arial, Helvetica, sans-serif;
+
         }
     </style>
   </head>
