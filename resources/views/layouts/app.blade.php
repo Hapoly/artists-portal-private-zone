@@ -20,7 +20,7 @@
         }
     </style>
   </head>
-  <body class="teal lighten-5" style="direction: rtl; background-image: url(http://localhost:8000/img/bg/6.jpg);">
+  <body class="teal lighten-5" style="direction: rtl; background-image: url({{url('img/bg/6.jpg')}});">
     <div class="navbar-fixed">
         <nav class="nav-color">
             <div class="nav-wrapper nav-color">
