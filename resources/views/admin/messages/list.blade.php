@@ -74,7 +74,7 @@
                                     <a href="{{url('admin/message/show/' . $message->id)}}" class="waves-effect waves-light btn right" target="_blank">جزئیات</a>
                                     @if($message->status == 2)
                                         <a href="{{url('admin/message-recylce/' . $message->id)}}" class="waves-effect waves-light btn-flat right">بازگردانی</a>
-                                    elseif($message->status == 1)
+                                    @elseif($message->status == 1)
                                         <a href="{{url('admin/message-remove/' . $message->id)}}" class="waves-effect waves-light btn-flat right">حذف</a>
                                     @endif
                                 </td>
