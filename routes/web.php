@@ -9,6 +9,10 @@ Route::get('/dashboard', 'HomeController@dashboard')->middleware('auth');
 Route::get('/profile', 'HomeController@profileGet')->middleware('auth');
 Route::post('/profile', 'HomeController@profilePost')->middleware('auth');
 
+Route::get('help', function () {
+    return view('help');
+});
+
 /* ===================================================================
                          management pages
 ====================================================================*/
@@ -66,35 +70,51 @@ Route::group(['namespace' => 'Admin', 'prefix' => 'admin', 'middleware' => ['aut
 
 /* ====================  regular panels  =============================*/
 
-Route::group(['namespace' => 'RegularMember', 'middleware' => 'auth'], function () {
-    // Controllers Within The "App\Http\Controllers\RegularMember" Namespace
+Route::group(['namespace' => 'Regular', 'middleware' => 'auth', 'prefix' => 'user'], function () {
+    /* artists list */
+    Route::get('/artists/{page?}', 'RegularArtistsController@list');
+    /* single artists page for editing or viewing */
+    Route::get ('/artist/show/{ArtistId}', 'RegularArtistsController@view')->where('ArtistId', '[0-9]+');
+    
+    Route::get ('/artist/edit/{ArtistId}', 'RegularArtistsController@editGet')->where('ArtistId', '[0-9]+');
+    Route::post('/artist/edit/{ArtistId}', 'RegularArtistsController@editPost')->where('ArtistId', '[0-9]+');
+    /* new artist page */
+    Route::get ('/artist-new', 'RegularArtistsController@newGet' );
+    Route::post('/artist-new', 'RegularArtistsController@newPost');
+    /* Artist remove */
+    Route::get('/artist-remove/{ArtistId}', 'RegularArtistsController@remove');
+    Route::get('/artist-accept/{ArtistId}', 'RegularArtistsController@accept');
+    Route::get('/artist-ban/{ArtistId}', 'RegularArtistsController@ban');
+    Route::get('/artist-active/{ArtistId}', 'RegularArtistsController@active');
+    Route::get('/artist-recylce/{ArtistId}', 'RegularArtistsController@recylce');
 
-    /* units list */
-    Route::get('/units/{page?}/{size?}', 'NormalUnitsController@list');
-    /* single unit page for editing or viewing */
-    Route::get ('/unit/{unitId}/{page?}/{size?}', 'NormalUnitsController@editGet')->where('unitId', '[0-9]+');
-    Route::post('/unit/{unitId}/{page?}/{size?}', 'NormalUnitsController@editPost')->where('unitId', '[0-9]+');
-    /* new unit page */
-    Route::get('/unit-new', 'NormalUnitsController@newGet');
-    Route::post('/unit-new', 'NormalUnitsController@newPost');
-    /* remove unit */
-    Route::get('/unit-remove/{id}', 'NormalUnitsController@remove');
-    /* print routes */
-    Route::get('/unit-list-print/', 'NormalUnitsController@listPrint');
-    Route::get('/unit-single-print/{id}', 'NormalUnitsController@singlePrint');
+    /* events list */
+    Route::get('/events/{page?}', 'RegularEventsController@list');
+    
+    Route::get ('/event/show/{eventId}', 'RegularEventsController@view')->where('eventId', '[0-9]+');
+    
+    Route::get ('/event/edit/{eventId}', 'RegularEventsController@editGet')->where('eventId', '[0-9]+');
+    Route::post('/event/edit/{eventId}', 'RegularEventsController@editPost')->where('eventId', '[0-9]+');
+    /* new event page */
+    Route::get ('/event-new', 'RegularEventsController@newGet' );
+    Route::post('/event-new', 'RegularEventsController@newPost');
+    /* event remove */
+    Route::get('/event-remove/{eventId}', 'RegularEventsController@remove');
+    Route::get('/event-accept/{eventId}', 'RegularEventsController@accept');
+    Route::get('/event-deactive/{eventId}', 'RegularEventsController@ban');
+    Route::get('/event-active/{eventId}', 'RegularEventsController@active');
+    Route::get('/event-recylce/{eventId}', 'RegularEventsController@recylce');
 
-    /* Artists list */
-    Route::get('/Artists/{page?}/{size?}', 'NormalArtistsController@list');
-    /* single Artists page for editing or viewing */
-    Route::get('/Artist/{ArtistId}/{page?}/{size?}', 'NormalArtistsController@editGet')->where('ArtistId', '[0-9]+');
-    Route::post('/Artist/{ArtistId}/{page?}/{size?}', 'NormalArtistsController@editPost')->where('ArtistId', '[0-9]+');
-    /* new Artist page */
-    Route::get('/Artist-new/{unitId?}', 'NormalArtistsController@newGet');
-    Route::post('/Artist-new', 'NormalArtistsController@newPost');
-
-    /* print routes */
-    Route::get('/Artist-list-print', 'NormalArtistsController@listPrint');
-    Route::get('/Artist-single-print/{id}', 'NormalArtistsController@singlePrint');
+    /* messages list */
+    Route::get('/messages/{page?}', 'RegularMessagesController@list');
+    
+    Route::get ('/message/show/{messageId}', 'RegularMessagesController@view')->where('messageId', '[0-9]+');
+    /* new message page */
+    Route::get ('/message-new/{recieverId?}', 'RegularMessagesController@newGet' );
+    Route::post('/message-new', 'RegularMessagesController@newPost');
+    /* message remove */
+    Route::get('/message-remove/{messageId}', 'RegularMessagesController@remove');
+    Route::get('/message-reply/{messageId}', 'RegularMessagesController@reply');
 
 });
 

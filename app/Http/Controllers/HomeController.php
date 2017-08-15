@@ -28,9 +28,32 @@ class HomeController extends Controller
     {
         $userGroupId = Auth::user()->group_code;
         $profileName = Auth::user()->first_name . ' ' . Auth::user()->last_name;
+
+
+        $myEvents = DB::table('events')
+            ->limit(5)
+            ->join('event_fields', 'event_fields.event_id', '=', 'events.id')
+            ->join('art_fields', 'art_fields.art_field_id', '=', 'event_fields.art_field_id')
+            ->where('art_fields.artist_id', '=', Auth::user()->id)
+            ->groupBy('events.id')
+            ->select(['events.*'])
+            ->get();
+
+        $allEvents = DB::table('events')
+            ->limit(5)
+            ->get();
+
+        $messages = DB::table('messages')
+            ->limit(5)
+            ->where('reciever' ,Auth::user()->id)
+            ->get();
+
         return view('dashboard', [
             'group_code'    => $userGroupId,
             'profile_name'  => $profileName,
+            'myEvents'      => $myEvents,
+            'allEvents'     => $allEvents,
+            'messages'         => $messages,
         ]);
     }
 

@@ -37,7 +37,7 @@
                 @if(Auth::user()->group_code == 2)
                 <div>
                     <ul class="right hide-on-med-and-down title-text">
-                        <li><a href="{{url('admin/reports')}}">گزارشات</a></li>
+                        <li><a href="{{url('help')}}">دستورالعمل ها</a></li>
                         <li><a href="{{url('admin/artists')}}">هنرمندان</a></li>
                         <li><a href="{{url('admin/events')}}">رویداد ها</a></li>
                         <li><a href="{{url('admin/messages')}}">پیام ها</a></li>
@@ -60,7 +60,7 @@
                         </li>
                     </ul>
                     <ul id="dropdown1" class="dropdown-content title-text">
-                        <li><a href="{{url('admin/reports')}}">گزارشات</a></li>
+                        <li><a href="{{url('help')}}">دستورالعمل ها</a></li>
                         <li><a href="{{url('admin/artists')}}">هنرمندان</a></li>
                         <li><a href="{{url('admin/events')}}">رویداد ها</a></li>
                         <li><a href="{{url('admin/messages')}}">پیام ها</a></li>
@@ -70,7 +70,7 @@
                 @elseif(Auth::user()->group_code == 1)
                 <div>
                     <ul class="right hide-on-med-and-down title-text">
-                        <li><a href="{{url('user/reports')}}">گزارشات</a></li>
+                        <li><a href="{{url('help')}}">دستورالعمل ها</a></li>
                         <li><a href="{{url('user/artists')}}">هنرمندان</a></li>
                         <li><a href="{{url('user/events')}}">رویداد ها</a></li>
                         <li><a href="{{url('user/messages')}}">پیام ها</a></li>
@@ -89,7 +89,7 @@
                         </li>
                     </ul>
                     <ul id="dropdown1" class="dropdown-content title-text">
-                        <li><a href="{{url('user/reports')}}">گزارشات</a></li>
+                        <li><a href="{{url('help')}}">دستورالعمل ها</a></li>
                         <li><a href="{{url('user/artists')}}">هنرمندان</a></li>
                         <li><a href="{{url('user/events')}}">رویداد ها</a></li>
                         <li><a href="{{url('user/messages')}}">پیام ها</a></li>
