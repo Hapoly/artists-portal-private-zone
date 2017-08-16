@@ -20,7 +20,7 @@
                 </h6>
             </div>
             <div class="col m2 s8 offset-s2">
-                <img class="responsive-img circle" src="{{url($artist->profile)}}" />
+                <img class="responsive-img circle" src="{{url('files/'. $artist->profile)}}" />
             </div>
             <div class="row">
                 <div class="col m8 s12 input">

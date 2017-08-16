@@ -118,7 +118,7 @@ Route::group(['namespace' => 'Regular', 'middleware' => 'auth', 'prefix' => 'use
 
 });
 
-Route::get('storage/{filename}', function ($filename)
+Route::get('files/storage/{filename}', function ($filename)
 {
     $path = storage_path('app') . '/storage/' . $filename;
 
