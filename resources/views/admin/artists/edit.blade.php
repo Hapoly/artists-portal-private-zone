@@ -151,10 +151,10 @@
                             </div>
                             <div class="row">
                                 <div class="col m6 s12">
-                                    <img class="responsive-img" src="{{isset($oldInputs['profile_pic'])?url($oldInputs['profile_pic']):url($artist->profile)}}" />
+                                    <img class="responsive-img" src="{{isset($oldInputs['profile_pic'])?url('files/' . $oldInputs['profile_pic']):url('files/' . $artist->profile)}}" />
                                 </div>
                                 <div class="col m6 s12">
-                                    <img class="responsive-img" src="{{isset($oldInputs['id_card_pic'])?url($oldInputs['id_card_pic']):url($artist->id_card)}}" />
+                                    <img class="responsive-img" src="{{isset($oldInputs['id_card_pic'])?url('files/'. $oldInputs['id_card_pic']):url('files/' . $artist->id_card)}}" />
                                 </div>
                             </div>
                             <div class="row">

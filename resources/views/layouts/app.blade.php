@@ -102,4 +102,27 @@
     </div>
     @yield('content')
   </body>
+    <footer class="page-footer nav-color">
+        <div class="container">
+            <div class="row">
+                <h6>
+                    آدرس: منطقه آزاد - ساختمان مرکزی - طبقه چهارم - دفتر بخش IT
+                </h6>
+                <h6>
+                    تلفن:‌ ۰۱۳۳۴۳۸۴۵۷-۹
+                </h6>
+                <h6>
+                    فکس:  ۰۱۳۳۴۷۳۸۴۷-۹
+                </h6>
+                <h6>
+                    ایمیل: artists@anzali-free-zone.org
+                </h6>
+            </div>
+        </div>
+        <div class="footer-copyright">
+        <div class="container">
+            تمام حقوق معنوی و مادی سامانه توسط شرکت <a class="grey-text text-lighten-4 right" href="http://takbanco.ir">تکبان رایانه کاسپین</a> محفوظ است
+        </div>
+        </div>
+    </footer>
 </html>

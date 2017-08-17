@@ -10,10 +10,23 @@
 .nav-color{
 	background-color: #006064;
 }
+html {
+    position: relative;
+    min-height: 100%;
+}
 body{
 	font-family: '0 Roya', tahoma, Arial;
+	margin: 0 0 200px; /* bottom = footer height */
 }
-
+footer {
+    background-color: orange;
+    position: absolute;
+    left: 0;
+    bottom: 0;
+    height: 200px;
+    width: 100%;
+    overflow:hidden;
+}
 .title-size {
 	font-size: 20px !important;
 }
