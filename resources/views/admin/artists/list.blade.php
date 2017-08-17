@@ -98,6 +98,57 @@
             <a href="{{url('admin/artist-new/')}}" class="waves-effect waves-light btn right" target="_blank">هنرمند جدید</a>
         </div>
     </div>
+    <div class="col s12 m8 offset-m2">
+        <div class="card-panel white">
+            <h5>جستجوی پیشرفته</h5>
+            <div class="row">
+                <form class="col s12" method="get" action="{{url('admin/artists/')}}">
+                    <div class="row">
+                        <div class="input-field col s6 m6">
+                            <input name="first_name" id="first_name" type="text" class="validate"
+                                value="{{Request::has('first_name')?Request::   input('first_name'):''}}">
+                            <label for="first_name">نام</label>
+                        </div>
+                        <div class="input-field col s6 m6">
+                            <input id="last_name" name="last_name" type="text" class="validate"
+                                value="{{Request::has('first_name')?Request::   input('first_name'):''}}">
+                            <label for="last_name">نام خانوادگی</label>
+                        </div>
+                    </div>
+                    <div class="row">
+                        <div class="input-field col s6 m6">
+                            <select name="habitate_place">
+                                <option value="0" disabled selected>   شهر را انتخاب کنید</option>
+                                <option value="1">    رشت</option>
+                                <option value="2">    آستانه</option>
+                                <option value="3">    انزلی</option>
+                                <option value="4">    صومعه سرا</option>
+                                <option value="5">    رودسر</option>
+                                <option value="6">    لاهیجان</option>
+                                <option value="7">    جیرده</option>
+                            </select>
+                            <label>شهر</label>
+                        </div>
+                        <div class="input-field col s6 m6">
+                            <select name="religion">
+                                <option value="0" disabled selected>   مذهب را انتخاب کنید</option>
+                                <option value="1">    اسلام شیعه</option>
+                                <option value="2">    اسلام سنی</option>
+                                <option value="3">    مسیحیت</option>
+                                <option value="4">    کلیمی</option>
+                                <option value="5">    زرتشتی</option>
+                                <option value="6">    رضا</option>
+                            </select>
+                            <label>مذهب</label>
+                        </div>
+                    </div>
+                    <div class="row">
+                        <button class="btn waves-effect waves-light" type="submit" name="action">جستجو</button>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
 </div>
 
 @endsection

@@ -30,6 +30,7 @@ $(document).ready(function(){
                 'موسیقی سنتی': null,
                 'تمبک': null,
                 'پانتومیم': null,
+                'اخبار': null,
             },
             limit: 5,
             minLength: 1

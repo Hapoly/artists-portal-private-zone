@@ -32,6 +32,27 @@ class AdminArtistsController extends Controller
             $search = $request->input('search');
             $artists = $artists->whereRaw("users.first_name LIKE '%$search%' OR users.last_name LIKE '%$search%'");
         }
+
+        if($request->has('first_name')){
+            $search = $request->input('first_name');
+            $artists = $artists->whereRaw("users.first_name LIKE '%$search%'");   
+        }
+
+        if($request->has('last_name')){
+            $search = $request->input('last_name');
+            $artists = $artists->whereRaw("users.last_name LIKE '%$search%'");   
+        }
+        
+        if($request->input('religion') != 0){
+            $search = $request->input('religion');
+            $artists = $artists->whereRaw("artists.religion = $search");
+        }
+
+        if($request->input('habitate_place') != 0){
+            $search = $request->input('habitate_place');
+            $artists = $artists->whereRaw("artists.habitate_place = $search");
+        }
+
         $artists = $artists->get();
         $artistsCount = DB::table('users')->where('group_code', '1')->count();
 
@@ -397,71 +418,6 @@ class AdminArtistsController extends Controller
         return $validator;
     }
 
-    function generatePages($total, $current){
-        if($total > 1){
-            $total=intval($total);
-
-            $output=[];
-            $current_page= (false == isset($current)) ? 0 : $current;
-            $lastPage = -1;
-            $lower = $current_page -3;
-            $upper = $current_page +3;
-            for($page=0;$page<$total;$page++){
-                if(($page > $lower && $page < $upper) || $page < 1 || $page > ($total-2)){
-                    if($lastPage + 1 != $page)
-                        array_push($output, '#');
-                    array_push($output, $page+1);
-                    $lastPage = $page;
-                }
-            }
-            return $output;
-        }else{
-            return [];
-        }
-    }
-
-    public function listPrint(Request $request){
-        $startPage  = $request->input('startPage');
-        $endPage    = $request->input('endPage');
-        $pageSize   = $request->input('pageSize');
-
-        $offset = $startPage * $pageSize;
-        $limit = $pageSize * ($endPage - $startPage + 1);
-        $employees = DB::table('employees')
-            ->offset($offset)
-            ->limit($limit)
-            ->get();
-
-        for($i=0; $i<sizeof($employees); $i++){
-            $employees[$i]->unitTitle = DB::table('units')->where('id', '=', $employees[$i]->unit_id)->first()->title;
-        }
-
-        return view('prints/list-employee', [
-            'employees'         => $employees,
-            'field'             => $this->prettify(DB::table('study_fields')->get()),
-            'degree'            => $this->prettify(DB::table('degrees')->get()),
-            'job'               => $this->prettify(DB::table('job_fields')->get()),
-            'marrige'           => $this->prettify(DB::table('merrige_types')->get()),
-            'habitate'          => $this->prettify(DB::table('cities')->get()),
-            'gender'            => $this->prettify(DB::table('genders')->get()),
-            'complete'          => $request->has('complete')? true : false,
-            ])->render();
-    }
-
-    public function singlePrint($id){
-        $employee = DB::table('employees')->where('id', '=', $id)->first();
-        $unitTitle = DB::table('units')->where('id', '=', $employee->unit_id)->first()->title;
-        return view('prints/single-employee', [
-            'info'              => $employee,
-            'field'             => $this->prettify(DB::table('study_fields')->get()),
-            'degree'            => $this->prettify(DB::table('degrees')->get()),
-            'job'               => $this->prettify(DB::table('job_fields')->get()),
-            'marrige'           => $this->prettify(DB::table('merrige_types')->get()),
-            'habitate'          => $this->prettify(DB::table('cities')->get()),
-            'gender'            => $this->prettify(DB::table('genders')->get()),
-            'unitTitle'         => $unitTitle,
-            ])->render();
-    }
 
     public function get_religion_code($code){
         $data = [
