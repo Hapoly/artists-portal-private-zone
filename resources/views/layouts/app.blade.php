@@ -50,7 +50,6 @@
                     <ul class="nav navbar-nav navbar-left">
                         <li>
                             <a style="margin-top: 10px;" href="{{url('logout')}}" class="waves-effect waves-light btn left">خروج</a>
-                            <li><a href="{{url('news')}}">اخبار</a></li>
                             <li><a href="{{url('questions')}}">سوالات متداول</a></li>
                             <li><a href="{{url('help')}}">دستورالعمل ها</a></li>
                         </li>
@@ -83,7 +82,6 @@
                     <ul class="nav navbar-nav navbar-left">
                         <li>
                             <a style="margin-top: 10px;" href="{{url('logout')}}" class="waves-effect waves-light btn left">خروج</a>
-                            <li><a href="{{url('news')}}">اخبار</a></li>
                             <li><a href="{{url('questions')}}">سوالات متداول</a></li>
                             <li><a href="{{url('help')}}">دستورالعمل ها</a></li>
                         </li>

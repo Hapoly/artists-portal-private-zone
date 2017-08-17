@@ -12,6 +12,9 @@ Route::post('/profile', 'HomeController@profilePost')->middleware('auth');
 Route::get('help', function () {
     return view('help');
 });
+Route::get('questions', function () {
+    return view('questions');
+});
 
 /* ===================================================================
                          management pages
