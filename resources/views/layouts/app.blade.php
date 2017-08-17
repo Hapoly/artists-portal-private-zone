@@ -37,7 +37,7 @@
                 @if(Auth::user()->group_code == 2)
                 <div>
                     <ul class="right hide-on-med-and-down title-text">
-                        <li><a href="{{url('help')}}">دستورالعمل ها</a></li>
+                        <li><a href="{{url('admin/requests')}}">درخواست ها</a></li>
                         <li><a href="{{url('admin/artists')}}">هنرمندان</a></li>
                         <li><a href="{{url('admin/events')}}">رویداد ها</a></li>
                         <li><a href="{{url('admin/messages')}}">پیام ها</a></li>
@@ -50,6 +50,9 @@
                     <ul class="nav navbar-nav navbar-left">
                         <li>
                             <a style="margin-top: 10px;" href="{{url('logout')}}" class="waves-effect waves-light btn left">خروج</a>
+                            <li><a href="{{url('news')}}">اخبار</a></li>
+                            <li><a href="{{url('questions')}}">سوالات متداول</a></li>
+                            <li><a href="{{url('help')}}">دستورالعمل ها</a></li>
                         </li>
                     </ul>
                     <ul class="right hide-on-large-only" style="padding-right: 0px;">
@@ -60,7 +63,7 @@
                         </li>
                     </ul>
                     <ul id="dropdown1" class="dropdown-content title-text">
-                        <li><a href="{{url('help')}}">دستورالعمل ها</a></li>
+                        <li><a href="{{url('admin/requests')}}">درخواست ها</a></li>
                         <li><a href="{{url('admin/artists')}}">هنرمندان</a></li>
                         <li><a href="{{url('admin/events')}}">رویداد ها</a></li>
                         <li><a href="{{url('admin/messages')}}">پیام ها</a></li>
@@ -70,7 +73,8 @@
                 @elseif(Auth::user()->group_code == 1)
                 <div>
                     <ul class="right hide-on-med-and-down title-text">
-                        <li><a href="{{url('help')}}">دستورالعمل ها</a></li>
+
+                        <li><a href="{{url('user/requests')}}">درخواست ها</a></li>
                         <li><a href="{{url('user/artists')}}">هنرمندان</a></li>
                         <li><a href="{{url('user/events')}}">رویداد ها</a></li>
                         <li><a href="{{url('user/messages')}}">پیام ها</a></li>
@@ -79,6 +83,9 @@
                     <ul class="nav navbar-nav navbar-left">
                         <li>
                             <a style="margin-top: 10px;" href="{{url('logout')}}" class="waves-effect waves-light btn left">خروج</a>
+                            <li><a href="{{url('news')}}">اخبار</a></li>
+                            <li><a href="{{url('questions')}}">سوالات متداول</a></li>
+                            <li><a href="{{url('help')}}">دستورالعمل ها</a></li>
                         </li>
                     </ul>
                     <ul class="right hide-on-large-only" style="padding-right: 0px;">
@@ -89,7 +96,7 @@
                         </li>
                     </ul>
                     <ul id="dropdown1" class="dropdown-content title-text">
-                        <li><a href="{{url('help')}}">دستورالعمل ها</a></li>
+                        <li><a href="{{url('user/requests')}}">درخواست ها</a></li>
                         <li><a href="{{url('user/artists')}}">هنرمندان</a></li>
                         <li><a href="{{url('user/events')}}">رویداد ها</a></li>
                         <li><a href="{{url('user/messages')}}">پیام ها</a></li>
@@ -103,7 +110,7 @@
     @yield('content')
   </body>
     <footer class="page-footer nav-color">
-        <div class="container">
+        <div class="container" style="">
             <div class="row">
                 <h6>
                     آدرس: منطقه آزاد - ساختمان مرکزی - طبقه چهارم - دفتر بخش IT

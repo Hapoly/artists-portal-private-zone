@@ -41,7 +41,7 @@
                     <ul class="slides">
                     @foreach($images as $image)
                         <li>
-                            <img src="{{url($image->name)}}">
+                            <img src="{{url('files/' . $image->name)}}">
                         </li>
                     @endforeach
                     </ul>
@@ -57,15 +57,6 @@
                         class="waves-effect waves-light btn"
                         >حذف
                     </a>
-                    @if($event->status == 1)
-                        <a href="{{url('user/event-accept/' . $event->id)}}" class="waves-effect waves-light btn-flat">تائید</a>
-                    @elseif($event->status == 2)
-                        <a href="{{url('user/event-deactive/' . $event->id)}}" class="waves-effect waves-light btn-flat">غیرفعال</a>
-                    @elseif($event->status == 3)
-                        <a href="{{url('user/event-active/' . $event->id)}}" class="waves-effect waves-light btn-flat">فعال</a>
-                    @elseif($event->status == 4)
-                        <a href="{{url('user/event-recylce/' . $event->id)}}" class="waves-effect waves-light btn-flat">بازگردانی</a>
-                    @endif
                     @if($event->status == 1)
                         <span class="left new badge amber lighten-1" data-badge-caption="در انتظار برای تایید"></span>
                     @elseif($event->status == 2)

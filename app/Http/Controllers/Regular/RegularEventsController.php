@@ -108,7 +108,7 @@ class RegularEventsController extends Controller
                         'end'           => $request->input('end_day') . '-' .
                                            $request->input('end_month') . '-' .
                                            $request->input('end_year'),
-                        'place'         => $this->get_habitate_place_title($request->input('habitate_place')),
+                        'place'         => $this->get_habitate_place_title($request->input('place')),
                         'phone'         => $request->input('phone'),
                     ]);
 
@@ -168,6 +168,8 @@ class RegularEventsController extends Controller
         $oldInputs['end_day'] = $end[0];
         $oldInputs['end_month'] = $end[1];
         $oldInputs['end_year'] = $end[2];
+
+        $oldInputs['place'] = $this->get_habitate_place_code($oldInputs['place']);
 
         return view('regular.events.edit', [
             'title'         => $event->title,

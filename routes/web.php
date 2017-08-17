@@ -65,7 +65,16 @@ Route::group(['namespace' => 'Admin', 'prefix' => 'admin', 'middleware' => ['aut
     Route::post('/message-new', 'AdminMessagesController@newPost');
     /* message remove */
     Route::get('/message-remove/{messageId}', 'AdminMessagesController@remove');
+    Route::get('/message-recylce/{messageId}', 'AdminMessagesController@recylce');
     Route::get('/message-reply/{messageId}', 'AdminMessagesController@reply');
+
+    /* event requests list */
+    Route::get('/requests/{page?}', 'AdminRequestsController@list');
+    /* new event page */
+    Route::get ('/request-new/{eventId}/{artist_id}', 'AdminRequestsController@newGet');
+    /* event remove */
+    Route::get('/request-accept/{requestId}', 'AdminRequestsController@accept');
+    Route::get('/request-refuse/{requestId}', 'AdminRequestsController@refuse');
 });
 
 /* ====================  regular panels  =============================*/
@@ -114,8 +123,16 @@ Route::group(['namespace' => 'Regular', 'middleware' => 'auth', 'prefix' => 'use
     Route::post('/message-new', 'RegularMessagesController@newPost');
     /* message remove */
     Route::get('/message-remove/{messageId}', 'RegularMessagesController@remove');
+    Route::get('/message-recylce/{messageId}', 'RegularMessagesController@recylce');
     Route::get('/message-reply/{messageId}', 'RegularMessagesController@reply');
 
+    /* event requests list */
+    Route::get('/requests/{page?}', 'RegularRequestsController@list');
+    /* new event page */
+    Route::get ('/request-new/{eventId}/{artist_id}', 'RegularRequestsController@newGet');
+    /* event remove */
+    Route::get('/request-accept/{requestId}', 'RegularRequestsController@accept');
+    Route::get('/request-refuse/{requestId}', 'RegularRequestsController@refuse');
 });
 
 Route::get('files/storage/{filename}', function ($filename)

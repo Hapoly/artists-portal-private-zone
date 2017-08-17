@@ -27,12 +27,21 @@
                 </div>
             </div>
             <div class="row">
-                <div class="col m12 s12 input">
+                <div class="col m12 s12 input right">
                     @foreach($fields as $art_field)
                         <div class="chip">
                             {{$art_field->art_field_title}}
                         </div>
                     @endforeach
+                    @if($request == 0)
+                    <a href="{{url('admin/request-new/' . $event->id . '/' . Auth::user()->id)}}" class="waves-effect left waves-light btn-flat">درخواست</a>
+                    @elseif($request == 1)
+                        <span class="left new badge amber lighten-1" data-badge-caption="در انتظار برای تایید درخواست"></span>
+                    @elseif($request == 2)
+                        <span class="left new badge light-green" data-badge-caption="درخواست تایید شده"></span>
+                    @elseif($request == 3)
+                        <span class="left new badge light-red" data-badge-caption="درخواست رد شده"></span>
+                    @endif
                 </div>
             </div>
             @if(sizeof($images) > 0)
@@ -41,7 +50,7 @@
                     <ul class="slides">
                     @foreach($images as $image)
                         <li>
-                            <img src="{{url($image->name)}}">
+                            <img src="{{url('files/' . $image->name)}}">
                         </li>
                     @endforeach
                     </ul>

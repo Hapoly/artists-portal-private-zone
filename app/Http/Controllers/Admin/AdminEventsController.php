@@ -58,12 +58,26 @@ class AdminEventsController extends Controller
         $fields = DB::table('event_fields')->where('event_id', $id)->get();
 
         $event->place = $this->get_habitate_place_code($event->place);
+
+        $event_request = DB::table('event_requests')
+                            ->where('event_id', $id)
+                            ->where('artist_id', Auth::user()->id)
+                            ->first();
+
+        $request_status = 0;
+
+        if($event_request != Null)
+            $request_status = $event_request->status;
+
         return view('admin.events.view', [
-            'event'        => $event,
-            'images'    => $images,
-            'fields'    => $fields,
+            'event'         => $event,
+            'images'        => $images,
+            'fields'        => $fields,
+            'request'       => $request_status,
         ]);
+
     }
+
     public function editPost(Request $request, $id){
         $validator = $this->myEventEditValidate($request);
         $event = DB::table('events')
@@ -98,7 +112,7 @@ class AdminEventsController extends Controller
                         'end'           => $request->input('end_day') . '-' .
                                            $request->input('end_month') . '-' .
                                            $request->input('end_year'),
-                        'place'         => $this->get_habitate_place_title($request->input('habitate_place')),
+                        'place'         => $this->get_habitate_place_title($request->input('place')),
                         'phone'         => $request->input('phone'),
                     ]);
 
@@ -157,6 +171,8 @@ class AdminEventsController extends Controller
         $oldInputs['end_day'] = $end[0];
         $oldInputs['end_month'] = $end[1];
         $oldInputs['end_year'] = $end[2];
+
+        $oldInputs['place'] = $this->get_habitate_place_code($oldInputs['place']);
 
         return view('admin.events.edit', [
             'title'         => $event->title,
