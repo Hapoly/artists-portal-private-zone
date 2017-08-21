@@ -53,6 +53,11 @@ class AdminArtistsController extends Controller
             $artists = $artists->whereRaw("artists.habitate_place = $search");
         }
 
+        if($request->input('gender') != 0){
+            $search = $request->input('gender');
+            $artists = $artists->whereRaw("artists.gender = $search");
+        }
+
         $artists = $artists->get();
         $artistsCount = DB::table('users')->where('group_code', '1')->count();
 

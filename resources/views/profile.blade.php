@@ -1,77 +1,82 @@
 @extends('layouts.app')
 
 @section('title')
-پروفایل شما
+{{$artist->first_name . ' ' . $artist->last_name}}
 @endsection
 
 @section('content')
-@if (count($errors) > 0)
-    <div class="alert alert-danger rtl">
-        <ul>
-        @foreach ($errors->all() as $error)
-                <li>{{ $error }}</li>
-        @endforeach
-        </ul>
-    </div>
-@endif
-<div class="row">
-    <div class="col-lg-12 col-md-12">
-        <div class="card">
-            <div class="card-header rtl" data-background-color="purple">
-                <h4 class="title">{{$user['first_name'] . ' ' . $user['last_name']}} ({{$name}})</h4>
+<div class="top-buffer row">
+    <div class="col s12 m8 offset-m2">
+        <div class="card-panel white">
+            <div class="col m10 s12">
+                <h5 class="input">{{$artist->first_name}} {{$artist->last_name}}</h5>
+                <h6 class="input"><i>{{$artist->nickname}}</i></h6>
+                <h6>آدرس ایمیل: {{$artist->email}}</h6>
+                <h6>
+                    شماره تماس ثابت: {{$artist->phone}}
+                </h6>
+                <h6>
+                    شماره تماس همراه: {{$artist->cellphone}}
+                </h6>
             </div>
-            <div class="card-content">
-                <form action="{{url('profile')}}" method="post">
-                    {{ csrf_field() }}
-                    <div class="row">
-                        <div class="col-md-6 col-sm-6 pull-right">
-                            <div class="form-group label-floating rtl col-lg-12 col-md-12">
-                                <label class="control-label">نام</label>
-                                <input type="text" name="first_name" value="{{isset($user)? $user['first_name']: ''}}" class="form-control">
-                            </div>
-                        </div>
-                        <div class="col-md-6 col-sm-6 pull-right">
-                            <div class="form-group label-floating rtl col-lg-12 col-md-12">
-                                <label class="control-label">نام خانوادگی</label>
-                                <input type="text" name="last_name" value="{{isset($user)? $user['last_name']: ''}}" class="form-control">
-                            </div>
-                        </div>
+            <div class="col m2 s8 offset-s2">
+                <img class="responsive-img circle" src="{{url('files/'. $artist->profile)}}" />
+            </div>
+            <div class="row">
+                <div class="col m8 s12 input">
+                    آدرس:
+                    {{$artist->address}}
+                </div>
+                <div class="col m3 s12 input">
+                    محل سکونت: 
+                    <div class="chip">
+                        {{$artist->habitate_place}}
                     </div>
-                    <div class="row">
-                        <div class="col-md-6 col-sm-6 pull-right">
-                            <div class="form-group label-floating rtl col-lg-12 col-md-12">
-                                <label class="control-label">کلمه عبور</label>
-                                <input type="password" name="password" value="{{isset($user)? 'THIS_IS_A_NOT_PASSWORD': ''}}" class="form-control">
-                            </div>
+                </div>
+                <div class="col m3 s12 input">
+                    مدت اقامت: {{$artist->habitate_years}} سال
+                </div>
+            </div>
+            <div class="row">
+                <div class="col m6 s12">
+                    @foreach($art_fields as $art_field)
+                        <div class="chip">
+                            {{$art_field->art_field_title}}
                         </div>
-                        <div class="col-md-6 col-sm-6 pull-right">
-                            <div class="form-group label-floating rtl col-lg-12 col-md-12">
-                                <label class="control-label">آدرس ایمیل</label>
-                                <input type="email" name="email" value="{{isset($user)? $user['email']: ''}}" class="form-control">
-                            </div>
+                    @endforeach
+                </div>
+                <div class="col m6 s12">
+                    @foreach($educations as $education)
+                        <div class="chip">
+                            {{$education->education_title}}
                         </div>
+                    @endforeach
+                </div>
+            </div>
+            <div class="row">
+                <div class="col m6 s12 input">
+                    مذهب: 
+                    <div class="chip">
+                        {{$artist->religion}}
                     </div>
-                    <div class="row">
-                        <div class="col-md-6 col-sm-6 pull-right">
-                            <div class="form-group label-floating rtl col-lg-12 col-md-12">
-                                <label class="control-label">شماره تماس ثابت</label>
-                                <input type="text" name="phone" value="{{isset($user)? $user['phone']: ''}}" class="form-control">
-                            </div>
-                        </div>
-                        <div class="col-md-6 col-sm-6 pull-right">
-                            <div class="form-group label-floating rtl col-lg-12 col-md-12">
-                                <label class="control-label">تلفن همراه</label>
-                                <input type="text" name="cellphone" value="{{isset($user)? $user['cellphone']: ''}}" class="form-control">
-                            </div>
-                        </div>
-                    </div>
-                    
-                    <div class="row">
-                        <div class="col-md-12">
-                            <button type="submit" class="btn btn-primary pull-right">ذخیره مشخصات</button>
-                        </div>
-                    </div>
-                </form>
+                </div>
+                <div class="col m6 s12 input">
+                    تولد: {{$artist->birth_year}}/{{$artist->birth_month}}/{{$artist->birth_day}} در {{$artist->birth_place}}
+                </div>
+            </div>
+            <div class="row">
+                <a style="margin: 2" href="{{url('admin/artist/edit/' . $artist->id)}}"
+                    class="waves-effect waves-light btn" target="_blank">
+                    ویرایش</a>
+                @if($artist->status == 1)
+                    <span class="left new badge amber lighten-1" data-badge-caption="در انتظار برای تایید"></span>
+                @elseif($artist->status == 2)
+                    <span class="left new badge light-green" data-badge-caption="فعال"></span>
+                @elseif($artist->status == 3)
+                    <span class="left new badge grey lighten-1" data-badge-caption="محروم از حضور"></span>
+                @elseif($artist->status == 4)
+                    <span class="left new badge deep-orange accent-3" data-badge-caption="حذف شده"></span>
+                @endif
             </div>
         </div>
     </div>

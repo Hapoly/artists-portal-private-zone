@@ -42,7 +42,7 @@
                         <li><a href="{{url('admin/events')}}">رویداد ها</a></li>
                         <li><a href="{{url('admin/messages')}}">پیام ها</a></li>
                         <li>
-                            <a href="{{url('admin/profile')}}">
+                            <a href="{{url('profile')}}">
                                 {{Auth::user()->first_name}} {{Auth::user()->last_name}}
                             </a>
                         </li>
@@ -66,7 +66,7 @@
                         <li><a href="{{url('admin/artists')}}">هنرمندان</a></li>
                         <li><a href="{{url('admin/events')}}">رویداد ها</a></li>
                         <li><a href="{{url('admin/messages')}}">پیام ها</a></li>
-                        <li><a href="{{url('admin/profile')}}">{{Auth::user()->first_name}} {{Auth::user()->last_name}}</a></li>
+                        <li><a href="{{url('profile')}}">{{Auth::user()->first_name}} {{Auth::user()->last_name}}</a></li>
                     </ul>
                 </div>
                 @elseif(Auth::user()->group_code == 1)
@@ -77,7 +77,7 @@
                         <li><a href="{{url('user/artists')}}">هنرمندان</a></li>
                         <li><a href="{{url('user/events')}}">رویداد ها</a></li>
                         <li><a href="{{url('user/messages')}}">پیام ها</a></li>
-                        <li><a href="{{url('user/profile')}}">{{Auth::user()->first_name}} {{Auth::user()->last_name}}</a></li>
+                        <li><a href="{{url('profile')}}">{{Auth::user()->first_name}} {{Auth::user()->last_name}}</a></li>
                     </ul>
                     <ul class="nav navbar-nav navbar-left">
                         <li>
@@ -98,7 +98,7 @@
                         <li><a href="{{url('user/artists')}}">هنرمندان</a></li>
                         <li><a href="{{url('user/events')}}">رویداد ها</a></li>
                         <li><a href="{{url('user/messages')}}">پیام ها</a></li>
-                        <li><a href="{{url('user/profile')}}">{{Auth::user()->first_name}} {{Auth::user()->last_name}}</a></li>
+                        <li><a href="{{url('profile')}}">{{Auth::user()->first_name}} {{Auth::user()->last_name}}</a></li>
                     </ul>
                 </div>
                 @endif

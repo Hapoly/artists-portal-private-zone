@@ -116,7 +116,7 @@
                         </div>
                     </div>
                     <div class="row">
-                        <div class="input-field col s6 m6">
+                        <div class="input-field col s12 m4">
                             <select name="habitate_place">
                                 <option value="0" disabled selected>   شهر را انتخاب کنید</option>
                                 <option value="1">    رشت</option>
@@ -129,7 +129,7 @@
                             </select>
                             <label>شهر</label>
                         </div>
-                        <div class="input-field col s6 m6">
+                        <div class="input-field col s12 m4">
                             <select name="religion">
                                 <option value="0" disabled selected>   مذهب را انتخاب کنید</option>
                                 <option value="1">    اسلام شیعه</option>
@@ -140,6 +140,14 @@
                                 <option value="6">    رضا</option>
                             </select>
                             <label>مذهب</label>
+                        </div>
+                        <div class="input-field col s12 m4">
+                            <select name="gender">
+                                <option value="1" disabled selected>   همه</option>
+                                <option value="2">    مذکر</option>
+                                <option value="3">    مونث</option>
+                            </select>
+                            <label>جنسیت</label>
                         </div>
                     </div>
                     <div class="row">

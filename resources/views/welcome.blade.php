@@ -115,11 +115,19 @@
                                     </div>
 
                                     <div class="row"> 
-                                        <div class="input-field col s12 m12">
+                                        <div class="input-field col s12 m6">
                                             <input  id="reg_email" name="email" type="email" class="validate"
                                             value="{{isset($oldInputs)?$oldInputs['email']:''}}"/>
                                             <label for="reg_email">* آدرس ایمیل</label>
                                         </div> 
+                                        <div class="input-field col s6 m6">
+                                            <select name="gender" value="2">
+                                                <option value="1" disabled selected>   مشخص نشده</option>
+                                                <option value="2">    مذکر</option>
+                                                <option value="3">    مونث</option>
+                                            </select>
+                                            <label>جنسیت</label>
+                                        </div>
                                     </div>
 
                                     <div class="row"> 

@@ -58,17 +58,31 @@ class HomeController extends Controller
     }
 
     public function profileGet(Request $request){
-        $userGroupId = Auth::user()->group_code;
-        $userId = Auth::user()->id;
-        $user = get_object_vars(DB::table('users')
-            ->where('id', '=', $userId)
-            ->first());
+        $artist = DB::table('users')
+            ->join('artists', 'artists.id', '=', 'users.id')
+            ->select(
+                [
+                    'users.first_name',
+                    'users.last_name',
+                    'users.status',
+                    'users.email',
+                    'artists.*',
+                ])
+            ->where('users.id', '=', Auth::user()->id)
+            ->first();
 
-        return view('profile',[
-                'group_code'    => $userGroupId,
-                'user'          => $user,
-                'name'          => Auth::user()->name
+        $educations = DB::table('educations')->where('artist_id', Auth::user()->id)->get();
+        $art_fields = DB::table('art_fields')->where('artist_id', Auth::user()->id)->get();
+
+        $artist->religion = $this->get_religion_code($artist->religion);
+        $artist->habitate_place = $this->get_habitate_place_code($artist->habitate_place);
+
+        return view('profile', [
+            'artist'        => $artist,
+            'educations'    => $educations,
+            'art_fields'    => $art_fields,
         ]);
+
     }
 
     public function profilePost(Request $request){
@@ -154,9 +168,9 @@ class HomeController extends Controller
                 'id'                => $id,
                 'father_name'       => $request->input('father_name'),
                 'nickname'          => $request->input('nickname'),
-                'religion'          => $this->get_religion_code($request->input('religion')),
+                'religion'          => $this->get_religion_title($request->input('religion')),
                 'habitate_years'    => $request->input('habitate_years'),
-                'habitate_place'    => $this->get_habitate_place_code($request->input('habitate_place')),
+                'habitate_place'    => $this->get_habitate_place_title($request->input('habitate_place')),
                 'phone'             => $request->input('phone'),
                 'cellphone'         => $request->input('cellphone'),
                 'address'           => $request->input('address'),
@@ -199,6 +213,7 @@ class HomeController extends Controller
             'first_name.*'                  => 'لطفا نام را وارد کنید',
             'last_name.*'                   => 'لطفا نام خانوادگی کاربر را وارد کنید',
             'email.*'                       => 'آدرس ایمیل نامعتبر',
+            'gender.*'                      => 'لطفا جنسیت خود را انتخاب کنید',
             'father_name.*'                 => 'لطفا نام پدر خود را وارد کنید',
             'nickname.*'                    => 'نام هنری خود را وارد کنید',
 
@@ -224,6 +239,7 @@ class HomeController extends Controller
             'first_name'                  => 'required',
             'last_name'                   => 'required',
             'email'                       => 'required|email',
+            'gender'                      => 'required',
             'father_name'                 => 'required',
             'nickname'                    => 'required',
 
@@ -239,12 +255,41 @@ class HomeController extends Controller
             'birth_year'                  => 'required|numeric',
             'birth_place'                 => 'required',
             'password'                    => 'required|string|min:4',
+
+            'profile_pic'                 => 'required',
+            'id_card_pic'                 => 'required',
         ];
         $validator = Validator::make($request->all(), $rules, $messages);
 
         return $validator;
     }
-    public function get_religion_code($title){
+
+    public function get_religion_code($code){
+        $data = [
+            1 => "اسلام شیعه",
+            2 => "اسلام سنی",
+            3 => "مسیحیت",
+            4 => "کلیمی",
+            5 => "زرتشتی",
+            6 => "رضا",
+        ];
+        return $data[$code];
+    }
+
+    public function get_habitate_place_code($code){
+        $data = [
+            1 => "رشت",
+            2 => "آستانه",
+            3 => "انزلی",
+            4 => "صومعه سرا",
+            5 => "رودسر",
+            6 => "لاهیجان",
+            7 => "جیرده",
+        ];
+        return $data[$code];
+    }
+
+    public function get_religion_title($title){
         $data = [
             "اسلام شیعه"    => 1,
             "اسلام سنی"     => 2,
@@ -256,7 +301,7 @@ class HomeController extends Controller
         return $data[$title];
     }
 
-    public function get_habitate_place_code($title){
+    public function get_habitate_place_title($title){
         $data = [
             "رشت"       => 1,
             "آستانه"    => 2,
@@ -267,37 +312,5 @@ class HomeController extends Controller
             "جیرده"     => 7,
         ];
         return $data[$title];
-    }
-
-
-
-    public function myProfileValidate($request){
-        Validator::extend('checkIf', function ($attribute, $value, $parameters, $validator) {
-            return !(in_array($parameters[0], array('on', 'true', 1, '1')));
-        });
-        $messages = [
-            'first_name.*'                  => 'لطفا نام را وارد کنید',
-            'last_name.*'                   => 'لطفا نام خانوادگی کاربر را وارد کنید',
-            'email.*'                       => 'آدرس ایمیل نامعتبر',
-            
-            'password.*'                    => 'لطفا کلمه عبور را وارد کنید(حداقل ۴ حرف)',
-            
-            'phone.*'                       => 'شماره تلفن ثابت نامعتبر است',
-            'cellphone.*'                   => 'لطفا شماره تلفن همراه را وارد کنید',
-        ];
-
-        $rules = [
-            'first_name'                => 'required',
-            'last_name'                 => 'required',
-            'email'                     => 'required|email',
-            
-            'password'                  => 'required|string|min:4',
-            
-            'phone'                     => 'required|string',
-            'cellphone'                 => 'required|string',
-        ];
-        $validator = Validator::make($request->all(), $rules, $messages);
-
-        return $validator;
     }
 }
