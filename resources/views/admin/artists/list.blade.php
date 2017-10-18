@@ -25,7 +25,7 @@
             <div class="nav-wrapper teal">
                 <form method="get" action="{{url('admin/artists/' . $sort)}}">
                     <div class="input-field">
-                        <input placeholder="جتسجوی نام و نام خانوادگی" style="text-align: center; line-height: 60px; height: 60px;" name="search" type="search" required>
+                        <input value="{{$search}}" placeholder="جتسجوی نام و نام خانوادگی" style="text-align: center; line-height: 60px; height: 60px;" name="search" type="search" required>
                         <label class="label-icon" for="search"><i class="material-icons">search</i></label>
                         <i class="material-icons">close</i>
                     </div>

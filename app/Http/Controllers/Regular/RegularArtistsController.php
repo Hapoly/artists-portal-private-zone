@@ -29,8 +29,11 @@ class RegularArtistsController extends Controller
         }
 
         if($request->has('search')){
-            $search = $request->input('search');
-            $artists = $artists->whereRaw("users.first_name LIKE '%$search%' OR users.last_name LIKE '%$search%'");
+          $search_string = $request->input('search');
+          $search_parts = explode(' ', $search_string);
+          for($i=0; $i<sizeof($search_parts); $i++)
+            $search_parts[$i] = "users.first_name LIKE '%".$search_parts[$i]."%' OR users.last_name LIKE '%".$search_parts[$i]."%'";
+          $artists = $artists->whereRaw(implode(' OR ', $search_parts));
         }
         $artists = $artists->get();
 
