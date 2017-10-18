@@ -66,7 +66,6 @@
                                     @endif
                                 </td>
                                 <td>
-                                    <a href="{{url('admin/request/show/' . $request->id)}}" class="waves-effect waves-light btn right" target="_blank">جزئیات</a>
                                     @if($request->status == 1)
                                         <a href="{{url('admin/request-accept/' . $request->id)}}" class="waves-effect waves-light btn-flat right">تائید</a>
                                         <a href="{{url('admin/request-refuse/' . $request->id)}}" class="waves-effect waves-light btn-flat right">رد</a>
