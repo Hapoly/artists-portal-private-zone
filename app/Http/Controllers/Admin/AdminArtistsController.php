@@ -17,7 +17,8 @@ class AdminArtistsController extends Controller
 
         $artists = DB::table('users')
             ->join('artists', 'artists.id', '=', 'users.id')
-            ->select(['users.first_name', 'users.last_name', 'users.email', 'users.status', 'artists.*'])
+            ->join('art_fields', 'art_fields.artist_id', '=', 'artists.id')
+            ->select(['users.first_name', 'users.last_name', 'users.email', 'users.status', 'artists.*', 'art_fields.art_field_title'])
             ->where('users.group_code', '1')
             ->limit($size)
             ->offset(($page-1)*$size);
@@ -60,8 +61,27 @@ class AdminArtistsController extends Controller
             $search = $request->input('gender');
             $artists = $artists->whereRaw("artists.gender = $search");
         }
-
+        
+        if($request->input('art-fields') != '[]' && $request->input('art-fields') != NULL){
+          $art_fields = json_decode($request->input('art-fields'));
+          $where_caluses = [];
+          foreach($art_fields as $art_field)
+            array_push($where_caluses, 'art_fields.art_field_id = ' . $art_field->id);
+          $where_query = implode(' OR ', $where_caluses);
+          $artists = $artists->whereRaw($where_query);
+        }
+        
         $artists = $artists->get();
+        $result = array();
+        foreach ($artists as $data) {
+          $id = $data->id;
+          if (isset($result[$id])) {
+             $result[$id] = $data;
+          } else {
+             $result[$id] = $data;
+          }
+        }
+        $artists = $result;
         $artistsCount = DB::table('users')->where('group_code', '1')->count();
 
         $pageCount = ceil($artistsCount / $size);

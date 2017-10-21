@@ -25,7 +25,7 @@
             <div class="nav-wrapper teal">
                 <form method="get" action="{{url('admin/artists/' . $sort)}}">
                     <div class="input-field">
-                        <input value="{{$search}}" placeholder="جتسجوی نام و نام خانوادگی" style="text-align: center; line-height: 60px; height: 60px;" name="search" type="search" required>
+                        <input value="{{$search}}" placeholder="جستجوی نام و نام خانوادگی" style="text-align: center; line-height: 60px; height: 60px;" name="search" type="search" required>
                         <label class="label-icon" for="search"><i class="material-icons">search</i></label>
                         <i class="material-icons">close</i>
                     </div>
@@ -137,6 +137,11 @@
                             </select>
                             <label>جنسیت</label>
                         </div>
+                        <div class="input-field col s12 m6">
+                          <div class="chips chips-autocomplete art-fields-autocomplete"></div>
+                          <input hidden id="art-fields" name="art-fields" value="[]"></input>
+                        </div>
+
                     </div>
                     <div class="row">
                         <button class="btn waves-effect waves-light" type="submit" name="action">جستجو</button>
@@ -146,5 +151,20 @@
         </div>
     </div>
 </div>
+<script>
+  $('.chips').on('chip.add', function(e, chip){
+    var tags = $('.art-fields-autocomplete').material_chip('data');
+    $('#art-fields').val(JSON.stringify(tags.map(art_field_chip_to_text)));
+  });
 
+  $('.chips').on('chip.delete', function(e, chip){
+    var tags = $('.art-fields-autocomplete').material_chip('data');
+    $('#art-fields').val(JSON.stringify(tags.map(art_field_chip_to_text)));
+  });
+
+  $('.chips').on('chip.select', function(e, chip){
+    var tags = $('.art-fields-autocomplete').material_chip('data');
+    $('#art-fields').val(JSON.stringify(tags.map(art_field_chip_to_text)));
+  });
+</script>
 @endsection

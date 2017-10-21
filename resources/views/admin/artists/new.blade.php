@@ -82,10 +82,10 @@
                                     <label for="reg_artname">* نام هنری</label>
                                 </div>
                             </div>
-                                <div class="row">
-                                    <div class="chips chips-autocomplete art-fields-autocomplete"></div>
-                                    <input hidden id="art-fields" name="art-fields" value="[]"></input>
-                                </div>
+                            <div class="row">
+                                <div class="chips chips-autocomplete art-fields-autocomplete"></div>
+                                <input hidden id="art-fields" name="art-fields" value="[]"></input>
+                            </div>
                             <div class="row">
                                 <div class="input-field col s12">
                                     <input type="text" id="religion" name="religion" class="autocomplete religion-autocomplete"
