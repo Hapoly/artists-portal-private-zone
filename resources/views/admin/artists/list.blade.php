@@ -102,7 +102,7 @@
         <div class="card-panel white">
             <h5>جستجوی پیشرفته</h5>
             <div class="row">
-                <form class="col s12" method="get" action="{{url('admin/artists/')}}">
+                <form class="col s12" method="get" action="{{url('admin/artists/')}}" target="_blank">
                     <div class="row">
                         <div class="input-field col s6 m6">
                             <input name="first_name" id="first_name" type="text" class="validate"
@@ -145,7 +145,7 @@
                     </div>
                     <div class="row">
                         <button class="btn waves-effect waves-light" type="submit" name="action" value="t">جستجو</button>
-                        <button class="btn waves-effect waves-light" type="submit" name="print" target="_blank" value="t">چاپ</button>
+                        <button class="btn waves-effect waves-light" type="submit" name="print" value="t">چاپ</button>
                     </div>
                 </form>
             </div>
