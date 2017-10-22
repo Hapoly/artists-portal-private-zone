@@ -106,12 +106,12 @@
                     <div class="row">
                         <div class="input-field col s6 m6">
                             <input name="first_name" id="first_name" type="text" class="validate"
-                                value="{{Request::has('first_name')?Request::   input('first_name'):''}}">
+                                value="{{$first_name}}">
                             <label for="first_name">نام</label>
                         </div>
                         <div class="input-field col s6 m6">
                             <input id="last_name" name="last_name" type="text" class="validate"
-                                value="{{Request::has('first_name')?Request::   input('first_name'):''}}">
+                                value="{{$last_name}}">
                             <label for="last_name">نام خانوادگی</label>
                         </div>
                     </div>
@@ -119,32 +119,33 @@
                         <div class="input-field col s12 m6">
                             <select name="habitate_place">
                                 <option value="0" disabled selected>   شهر را انتخاب کنید</option>
-                                <option value="1">    رشت</option>
-                                <option value="2">    آستانه</option>
-                                <option value="3">    انزلی</option>
-                                <option value="4">    صومعه سرا</option>
-                                <option value="5">    رودسر</option>
-                                <option value="6">    لاهیجان</option>
-                                <option value="7">    جیرده</option>
+                                <option value="1" {{ $habitate_place == "1"? 'selected': ''}}>    رشت</option>
+                                <option value="2" {{ $habitate_place == "2"? 'selected': ''}}>    آستانه</option>
+                                <option value="3" {{ $habitate_place == "3"? 'selected': ''}}>    انزلی</option>
+                                <option value="4" {{ $habitate_place == "4"? 'selected': ''}}>    صومعه سرا</option>
+                                <option value="5" {{ $habitate_place == "5"? 'selected': ''}}>    رودسر</option>
+                                <option value="6" {{ $habitate_place == "6"? 'selected': ''}}>    لاهیجان</option>
+                                <option value="7" {{ $habitate_place == "7"? 'selected': ''}}>    جیرده</option>
                             </select>
                             <label>شهر</label>
                         </div>
                         <div class="input-field col s12 m6">
                             <select name="gender">
                                 <option value="1" disabled selected>   همه</option>
-                                <option value="2">    مذکر</option>
-                                <option value="3">    مونث</option>
+                                <option value="2" {{ $gender == "2"? 'selected': ''}}>    مذکر</option>
+                                <option value="3" {{ $gender == "3"? 'selected': ''}}>    مونث</option>
                             </select>
                             <label>جنسیت</label>
                         </div>
                         <div class="input-field col s12 m6">
-                          <div class="chips chips-autocomplete art-fields-autocomplete"></div>
-                          <input hidden id="art-fields" name="art-fields" value="[]"></input>
+                          <div class="chips chips-autocomplete art-fields-autocomplete chips-initial"></div>
+                          <input hidden id="art-fields" name="art-fields" value="{{$art_fields}}"></input>
                         </div>
 
                     </div>
                     <div class="row">
-                        <button class="btn waves-effect waves-light" type="submit" name="action">جستجو</button>
+                        <button class="btn waves-effect waves-light" type="submit" name="action" value="t">جستجو</button>
+                        <button class="btn waves-effect waves-light" type="submit" name="print" target="_blank" value="t">چاپ</button>
                     </div>
                 </form>
             </div>

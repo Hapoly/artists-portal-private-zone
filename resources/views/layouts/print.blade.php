@@ -28,7 +28,7 @@
 
 <body>
 
-<div class="wrapper">
+<div class="wrapper" style="display: inline-table;">
     <div class="content">
         <div class="container-fluid">
             <div class="row">

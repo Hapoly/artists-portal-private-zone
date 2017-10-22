@@ -86,14 +86,36 @@ class AdminArtistsController extends Controller
 
         $pageCount = ceil($artistsCount / $size);
 
-        return view('admin.artists.list', [
-            'artists'       => $artists,
-            'page'          => $page,
-            'pageSize'      => $size,
-            'pageCount'     => ceil($artistsCount / $size),
-            'sort'          => $request->has('sort')? ('?sort=' . $request->input('sort')) : '',
-            'search'        => $request->has('search')? $request->input('search'): ''
-            ]);
+        if($request->has('print'))
+        return view('admin.artists.list_print', [
+          'artists'         => $artists,
+          'page'            => $page,
+          'pageSize'        => $size,
+          'pageCount'       => ceil($artistsCount / $size),
+          'sort'            => $request->has('sort')? ('?sort=' . $request->input('sort'))            : '',
+          'search'          => $request->has('search')          ? $request->input('search')           : '',
+          'last_name'       => $request->has('last_name')       ? $request->input('last_name')        : '',
+          'first_name'      => $request->has('first_name')      ? $request->input('first_name')       : '',
+          'religion'        => $request->has('religion')        ? $request->input('religion')         : '',
+          'habitate_place'  => $request->has('habitate_place')  ? $request->input('habitate_place')   : '',
+          'gender'          => $request->has('gender')          ? $request->input('gender')           : '',
+          'art_fields'      => $request->has('art-fields')      ? $request->input('art-fields')       : '[]',
+          ]);
+        else
+          return view('admin.artists.list', [
+              'artists'         => $artists,
+              'page'            => $page,
+              'pageSize'        => $size,
+              'pageCount'       => ceil($artistsCount / $size),
+              'sort'            => $request->has('sort')? ('?sort=' . $request->input('sort'))            : '',
+              'search'          => $request->has('search')          ? $request->input('search')           : '',
+              'last_name'       => $request->has('last_name')       ? $request->input('last_name')        : '',
+              'first_name'      => $request->has('first_name')      ? $request->input('first_name')       : '',
+              'religion'        => $request->has('religion')        ? $request->input('religion')         : '',
+              'habitate_place'  => $request->has('habitate_place')  ? $request->input('habitate_place')   : '',
+              'gender'          => $request->has('gender')          ? $request->input('gender')           : '',
+              'art_fields'      => $request->has('art-fields')      ? $request->input('art-fields')       : '[]',
+              ]);
     }
 
     public function view(Request $request, $id){
