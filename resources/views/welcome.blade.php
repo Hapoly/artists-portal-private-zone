@@ -278,4 +278,21 @@
     });
     </script>
   </body>
+  <footer class="page-footer nav-color">
+      <div class="container" style="">
+          <div class="row">
+              <h6>
+                  آدرس: منطقه آزاد انزلی - فاز تجاری و گردشگری - ساختمان اداری - طبقه اول - دفتر مدیریت فرهنگی هنری و آموزش
+              </h6>
+              <h6>
+                  ۰۱۳-۳۴۴۳۸۱۸۹
+              </h6>
+          </div>
+      </div>
+      <div class="footer-copyright">
+      <div class="container">
+          تمام حقوق معنوی و مادی سامانه توسط شرکت <a class="grey-text text-lighten-4 right" href="http://takbanco.ir">تکبان رایانه کاسپین</a> محفوظ است
+      </div>
+      </div>
+  </footer>
 </html>
