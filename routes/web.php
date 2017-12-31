@@ -7,7 +7,9 @@ Route::get('/', function () {
 /* self pages */
 Route::get('/dashboard', 'HomeController@dashboard')->middleware('auth');
 Route::get('/profile', 'HomeController@profileGet')->middleware('auth');
-Route::post('/profile', 'HomeController@profilePost')->middleware('auth');
+
+Route::get('/profile-edit', 'HomeController@profileEditGet')->middleware('auth');
+Route::post('/profile-edit', 'HomeController@profileEditPost')->middleware('auth');
 
 Route::get('help', function () {
     return view('help');

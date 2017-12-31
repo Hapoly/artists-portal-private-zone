@@ -66,6 +66,7 @@ class HomeController extends Controller
                     'users.last_name',
                     'users.status',
                     'users.email',
+                    'users.group_code',
                     'artists.*',
                 ])
             ->where('users.id', '=', Auth::user()->id)
@@ -77,51 +78,78 @@ class HomeController extends Controller
         $artist->religion = $this->get_religion_code($artist->religion);
         $artist->habitate_place = $this->get_habitate_place_code($artist->habitate_place);
 
-        return view('profile', [
+        if($artist->group_code == 1)
+          return view('profile-regular', [
             'artist'        => $artist,
             'educations'    => $educations,
             'art_fields'    => $art_fields,
-        ]);
-
+          ]);
+        else if($artist->group_code == 2)
+          return view('profile-admin', [
+            'admin'         => $artist
+          ]);
     }
 
-    public function profilePost(Request $request){
+    public function profileEditGet(Request $request){
+      $artist = DB::table('users')
+          ->join('artists', 'artists.id', '=', 'users.id')
+          ->select(
+              [
+                  'users.first_name',
+                  'users.last_name',
+                  'users.status',
+                  'users.email',
+                  'users.group_code',
+                  'artists.*',
+              ])
+          ->where('users.id', '=', Auth::user()->id)
+          ->first();
+
+      $educations = DB::table('educations')->where('artist_id', Auth::user()->id)->get();
+      $art_fields = DB::table('art_fields')->where('artist_id', Auth::user()->id)->get();
+
+      $artist->religion = $this->get_religion_code($artist->religion);
+      $artist->habitate_place = $this->get_habitate_place_code($artist->habitate_place);
+
+      if($artist->group_code == 1)
+        return view('profile-edit-regular', [
+          'artist'        => $artist,
+          'educations'    => $educations,
+          'art_fields'    => $art_fields,
+        ]);
+      else if($artist->group_code == 2)
+        return view('profile-edit-admin', [
+          'admin'         => $artist
+        ]);
+    }
+    public function profileEditPost(Request $request){
         $userGroupId = Auth::user()->group_code;
-        $validator = $this->myProfileValidate($request);
+        if($userGroupId == 1)
+          return 'not developed yet';
+        
+        $validator = $this->myAdminProfileValidate($request);
         if($validator->fails()){
             $oldInputs = $request->all();
-
-            return view('profile', [
-                'group_code'            => $userGroupId,
-                'user'                  => $oldInputs,
-                'name'                  => Auth::user()->name
-                ])->withErrors($validator);
+            return view('profile-edit-admin', [
+              'admin'         => Auth::user()
+            ])->withErrors($validator);
 
         }else{
-            if ($request->input('password') == 'THIS_IS_A_NOT_PASSWORD'){
+            if ($request->input('password') == null){
 
-                DB::table('users')->where(['name' => Auth::user()->name])->update(
+                DB::table('users')->where(['id' => Auth::user()->id])->update(
                     [
-                        'email'                 => $request->input('email'),
                         'first_name'            => $request->input('first_name'),
                         'last_name'             => $request->input('last_name'),
-                        'phone'                 => $request->input('phone'),
-                        'cellphone'             => $request->input('cellphone'),
-                        'updated_at'            => time()[0]
                     ]
-                );   
-                
+                );
             }else{
 
-                DB::table('users')->where(['name' => Auth::user()->name])->update(
+                DB::table('users')->where(['id' => Auth::user()->id])->update(
                     [
-                        'email'                 => $request->input('email'),
                         'password'              => bcrypt($request->input('password')),
                         'first_name'            => $request->input('first_name'),
                         'last_name'             => $request->input('last_name'),
-                        'phone'                 => $request->input('phone'),
-                        'cellphone'             => $request->input('cellphone'),
-                        'updated_at'            => time()[0]
                     ]
                 );   
             }
@@ -164,23 +192,31 @@ class HomeController extends Controller
                 'password'          => bcrypt($request->input('password')),
                 'group_code'        => 1
             ])->id;
-            DB::table('artists')->insert([
-                'id'                => $id,
-                'father_name'       => $request->input('father_name'),
-                'nickname'          => $request->input('nickname'),
-                'religion'          => $this->get_religion_title($request->input('religion')),
-                'habitate_years'    => $request->input('habitate_years'),
-                'habitate_place'    => $this->get_habitate_place_title($request->input('habitate_place')),
-                'phone'             => $request->input('phone'),
-                'cellphone'         => $request->input('cellphone'),
-                'address'           => $request->input('address'),
-                'birth_day'         => $request->input('birth_day'),
-                'birth_month'       => $request->input('birth_month'),
-                'birth_year'        => $request->input('birth_year'),
-                'birth_place'       => $request->input('birth_place'),
-                'profile'           => $request->file('profile_pic')->store('storage'),
-                'id_card'           => $request->file('id_card_pic')->store('storage'),
-            ]);
+            $changes = [
+              'id'                => $id,
+              'father_name'       => $request->input('father_name'),
+              'nickname'          => $request->input('nickname'),
+              'religion'          => $this->get_religion_title($request->input('religion')),
+              'habitate_years'    => $request->input('habitate_years'),
+              'habitate_place'    => $this->get_habitate_place_title($request->input('habitate_place')),
+              'phone'             => $request->input('phone'),
+              'cellphone'         => $request->input('cellphone'),
+              'birth_day'         => $request->input('birth_day'),
+              'birth_month'       => $request->input('birth_month'),
+              'birth_year'        => $request->input('birth_year'),
+              'birth_place'       => $request->input('birth_place'),
+            ];
+            if($request->hasFile('profile'))
+              $changes['profile'] = $request->file('profile_pic')->store('storage');
+            else
+              $changes['profile'] = 'NA';
+            
+            if($request->hasFile('id_card'))
+              $changes['id_card'] = $request->file('id_card')->store('storage');
+            else
+              $changes['id_card'] = 'NA';
+
+            DB::table('artists')->insert($changes);
 
             $art_fields = json_decode($request->input('art-fields'));
             $educations = json_decode($request->input('educations'));
@@ -223,7 +259,6 @@ class HomeController extends Controller
             'phone.*'                       => 'شماره تماس همراه نامعتبر است',
             'cellphone.*'                   => 'شماره تلفن ثابت نامعتبر است',
 
-            'address.*'                     => 'آدرس نامعتبر است',
             'birth_day.*'                   => 'روز تولد نامعتبر است',
             'birth_month.*'                 => 'ماه تولد نامعتبر است',
             'birth_year.*'                  => 'سال تولد نامعتبر است',
@@ -249,20 +284,37 @@ class HomeController extends Controller
             'phone'                       => 'required',
             'cellphone'                   => 'required',
 
-            'address'                     => 'required',
             'birth_day'                   => 'required|numeric',
             'birth_month'                 => 'required|numeric',
             'birth_year'                  => 'required|numeric',
             'birth_place'                 => 'required',
             'password'                    => 'required|string|min:4',
 
-            'profile_pic'                 => 'required',
-            'id_card_pic'                 => 'required',
+            'profile_pic'                 => 'image',
+            'id_card_pic'                 => 'image',
         ];
         $validator = Validator::make($request->all(), $rules, $messages);
 
         return $validator;
     }
+
+    public function myAdminProfileValidate($request){
+      $messages = [
+          'first_name.*'                  => 'لطفا نام را وارد کنید',
+          'last_name.*'                   => 'لطفا نام خانوادگی کاربر را وارد کنید',
+          'password.*'                    => 'لطفا کلمه عبور را وارد کنید(حداقل ۴ حرف)',
+          'password_conf.*'               => 'کلمات عبور یکسان نیستند',
+      ];
+
+      $rules = [
+          'first_name'                  => 'required',
+          'last_name'                   => 'required',
+
+      ];
+      $validator = Validator::make($request->all(), $rules, $messages);
+
+      return $validator;
+  }
 
     public function get_religion_code($code){
         $data = [

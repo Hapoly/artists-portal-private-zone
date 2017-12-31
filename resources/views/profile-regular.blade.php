@@ -65,7 +65,7 @@
                 </div>
             </div>
             <div class="row">
-                <a style="margin: 2" href="{{url('admin/artist/edit/' . $artist->id)}}"
+                <a style="margin: 2" href="{{url('/profile-edit')}}"
                     class="waves-effect waves-light btn" target="_blank">
                     ویرایش</a>
                 @if($artist->status == 1)
