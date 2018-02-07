@@ -96,12 +96,12 @@
                                 <div class="input-field col m4 s6 right">
                                     <input id="end_month" type="number" name="end_month" min="1" max="12" class="validate"
                                     value="{{isset($oldInputs)?$oldInputs['end_month']:''}}"/>
-                                    <label for="end_month">* ماه پایاین</label>
+                                    <label for="end_month">* ماه پایانی</label>
                                 </div>
                                 <div class="input-field col m4 s6 right">
                                     <input id="end_year" type="number" name="end_year" min="1300" class="validate"
                                     value="{{isset($oldInputs)?$oldInputs['end_year']:''}}"/>
-                                    <label for="end_year">* سال پایاین</label>
+                                    <label for="end_year">* سال پایانی</label>
                                 </div>
                             </div>
                             <div class="file-field input-field row">
